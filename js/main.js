@@ -1,0 +1,436 @@
+/* ============================================
+   Jeremiah Daniel Serenge - Portfolio JS
+   Interactive functionality for data engineering portfolio
+   ============================================ */
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all modules
+    initNavbar();
+    initParticles();
+    initProjectFilter();
+    initSmoothScroll();
+    initContactForm();
+    initScrollAnimations();
+});
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+function initNavbar() {
+    const navbar = document.getElementById('navbar');
+    const navToggle = document.getElementById('navToggle');
+    const navMenu = document.getElementById('navMenu');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    // Scroll effect
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+
+        // Update active nav link based on scroll position
+        updateActiveNavLink();
+    });
+
+    // Mobile toggle
+    navToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+
+        // Animate hamburger to X
+        const spans = navToggle.querySelectorAll('span');
+        if (navMenu.classList.contains('active')) {
+            spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+            spans[1].style.opacity = '0';
+            spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+        } else {
+            spans[0].style.transform = '';
+            spans[1].style.opacity = '';
+            spans[2].style.transform = '';
+        }
+    });
+
+    // Close mobile menu on link click
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            navMenu.classList.remove('active');
+            const spans = navToggle.querySelectorAll('span');
+            spans[0].style.transform = '';
+            spans[1].style.opacity = '';
+            spans[2].style.transform = '';
+        });
+    });
+}
+
+function updateActiveNavLink() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    let current = '';
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop - 100;
+        if (window.scrollY >= sectionTop) {
+            current = section.getAttribute('id');
+        }
+    });
+
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+            link.classList.add('active');
+        }
+    });
+}
+
+/* ============================================
+   PARTICLE ANIMATION
+   ============================================ */
+function initParticles() {
+    const container = document.getElementById('particles');
+    if (!container) return;
+
+    const particleCount = 30;
+
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+
+        // Random positioning and animation
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        const size = Math.random() * 4 + 2;
+        const duration = Math.random() * 20 + 10;
+        const delay = Math.random() * 10;
+
+        particle.style.left = x + '%';
+        particle.style.top = y + '%';
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+        particle.style.animationDuration = duration + 's';
+        particle.style.animationDelay = delay + 's';
+        particle.style.opacity = Math.random() * 0.5 + 0.1;
+
+        container.appendChild(particle);
+    }
+}
+
+/* ============================================
+   PROJECT FILTERING
+   ============================================ */
+function initProjectFilter() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('.project-card');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Update active button
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const filter = btn.getAttribute('data-filter');
+
+            // Filter projects with animation
+            projectCards.forEach(card => {
+                const category = card.getAttribute('data-category');
+
+                if (filter === 'all' || category === filter) {
+                    card.style.display = 'block';
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+
+                    setTimeout(() => {
+                        card.style.transition = 'all 0.4s ease';
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 50);
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                    }, 400);
+                }
+            });
+        });
+    });
+}
+
+/* ============================================
+   MODAL / DOCUMENT VIEWER
+   ============================================ */
+const projectDocs = {
+    'credit-risk': {
+        title: 'Credit Risk Model - Documentation',
+        file: 'assets/docs/credit-risk-documentation.pdf',
+        type: 'pdf',
+        fallbackMessage: 'Credit Risk Model documentation and architecture overview'
+    },
+    'mophones': {
+        title: 'MoPhones Portfolio - Case Study',
+        file: 'assets/docs/mophones-case-study.pptx',
+        type: 'pptx',
+        fallbackMessage: 'MoPhones portfolio analysis case study presentation'
+    },
+    'forecasting': {
+        title: 'Sales Forecasting - Architecture',
+        file: 'assets/docs/sales-forecasting-architecture.pdf',
+        type: 'pdf',
+        fallbackMessage: 'Sales forecasting system architecture and methodology'
+    },
+    'chatbot': {
+        title: 'AI Chatbot - System Flowchart',
+        file: 'assets/docs/chatbot-flowchart.pdf',
+        type: 'pdf',
+        fallbackMessage: 'AI customer support chatbot system flowchart'
+    },
+    'bigdata': {
+        title: 'Big Data Pipeline - Diagram',
+        file: 'assets/docs/bigdata-pipeline-diagram.pdf',
+        type: 'pdf',
+        fallbackMessage: 'Enterprise big data pipeline architecture diagram'
+    },
+    'powerbi': {
+        title: 'Power BI Dashboards - Screenshots',
+        file: 'assets/docs/powerbi-dashboard-screenshots.pptx',
+        type: 'pptx',
+        fallbackMessage: 'Power BI enterprise dashboard screenshots and walkthrough'
+    }
+};
+
+const flowchartDocs = {
+    'etl-pipeline': {
+        title: 'Azure ETL Pipeline Architecture',
+        file: 'assets/flowcharts/etl-pipeline-architecture.pdf',
+        type: 'pdf',
+        fallbackMessage: 'End-to-end ETL pipeline from ERP sources to Power BI'
+    },
+    'ml-lifecycle': {
+        title: 'MLOps Lifecycle Diagram',
+        file: 'assets/flowcharts/ml-lifecycle.pptx',
+        type: 'pptx',
+        fallbackMessage: 'Complete ML lifecycle from training to production monitoring'
+    },
+    'bi-architecture': {
+        title: 'Enterprise BI Architecture',
+        file: 'assets/flowcharts/bi-architecture.pdf',
+        type: 'pdf',
+        fallbackMessage: 'Semantic model, DAX layer, and dashboard architecture'
+    },
+    'copilot-integration': {
+        title: 'Copilot + MCP Integration Workflow',
+        file: 'assets/flowcharts/copilot-mcp-workflow.pptx',
+        type: 'pptx',
+        fallbackMessage: 'Microsoft Copilot and MCP server integration workflow'
+    }
+};
+
+function openModal(projectId) {
+    const doc = projectDocs[projectId];
+    if (!doc) return;
+
+    showDocumentViewer(doc);
+}
+
+function openFlowchart(chartId) {
+    const doc = flowchartDocs[chartId];
+    if (!doc) return;
+
+    showDocumentViewer(doc);
+}
+
+function showDocumentViewer(doc) {
+    const modal = document.getElementById('docModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDownload = document.getElementById('modalDownload');
+    const docViewer = document.getElementById('docViewer');
+
+    modalTitle.textContent = doc.title;
+    modalDownload.href = doc.file;
+
+    // Check if file exists by trying to load it, otherwise show placeholder
+    // For GitHub Pages static hosting, we use iframe for PDFs
+    if (doc.type === 'pdf') {
+        docViewer.innerHTML = `
+            <iframe src="${doc.file}" type="application/pdf">
+                <div class="doc-placeholder">
+                    <i class="fas fa-file-pdf"></i>
+                    <h4>PDF Viewer</h4>
+                    <p>${doc.fallbackMessage}</p>
+                    <a href="${doc.file}" download class="btn btn-primary">
+                        <i class="fas fa-download"></i> Download PDF
+                    </a>
+                </div>
+            </iframe>
+        `;
+    } else {
+        // For PPTX, show placeholder with download option
+        // PPTX cannot be viewed in browser directly without conversion
+        docViewer.innerHTML = `
+            <div class="doc-placeholder">
+                <i class="fas fa-file-powerpoint"></i>
+                <h4>PowerPoint Presentation</h4>
+                <p>${doc.fallbackMessage}</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">
+                    <i class="fas fa-info-circle"></i> 
+                    For best viewing, download and open in PowerPoint or Google Slides
+                </p>
+                <a href="${doc.file}" download class="btn btn-primary" style="margin-top: 16px;">
+                    <i class="fas fa-download"></i> Download Presentation
+                </a>
+            </div>
+        `;
+    }
+
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    const modal = document.getElementById('docModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+
+    // Clear iframe after animation
+    setTimeout(() => {
+        document.getElementById('docViewer').innerHTML = '';
+    }, 300);
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeModal();
+    }
+});
+
+/* ============================================
+   SMOOTH SCROLL
+   ============================================ */
+function initSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
+/* ============================================
+   CONTACT FORM
+   ============================================ */
+function initContactForm() {
+    const form = document.getElementById('contactForm');
+    if (!form) return;
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Get form data
+        const formData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            subject: document.getElementById('subject').value,
+            message: document.getElementById('message').value
+        };
+
+        // Since this is a static site, we'll show a toast with the data
+        // In production, you could integrate with Formspree, Netlify Forms, or EmailJS
+        showToast('Thank you for reaching out! This is a static demo - integrate with Formspree or EmailJS for live submissions.');
+
+        // Log to console for debugging
+        console.log('Form submission:', formData);
+
+        // Reset form
+        form.reset();
+    });
+}
+
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toastMessage');
+
+    toastMessage.textContent = message;
+    toast.classList.add('show');
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 5000);
+}
+
+/* ============================================
+   SCROLL ANIMATIONS
+   ============================================ */
+function initScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Observe elements for animation
+    const animateElements = document.querySelectorAll('.expertise-card, .project-card, .timeline-item, .flowchart-card, .contact-item');
+
+    animateElements.forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = `all 0.6s ease ${index * 0.1}s`;
+        observer.observe(el);
+    });
+}
+
+/* ============================================
+   UTILITY FUNCTIONS
+   ============================================ */
+
+// Debounce function for performance
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Throttle function for scroll events
+function throttle(func, limit) {
+    let inThrottle;
+    return function(...args) {
+        if (!inThrottle) {
+            func.apply(this, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+
+// Add parallax effect to hero section
+window.addEventListener('scroll', throttle(() => {
+    const hero = document.querySelector('.hero');
+    if (hero) {
+        const scrolled = window.scrollY;
+        const parallax = hero.querySelector('.hero-bg');
+        if (parallax) {
+            parallax.style.transform = `translateY(${scrolled * 0.3}px)`;
+        }
+    }
+}, 16));
