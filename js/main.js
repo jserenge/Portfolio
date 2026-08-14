@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initSmoothScroll();
     initContactForm();
     initScrollAnimations();
+    initProjectTilt();
 });
 
 /* ============================================
@@ -152,6 +153,33 @@ function initProjectFilter() {
                     }, 400);
                 }
             });
+        });
+    });
+}
+
+/* ============================================
+   PROJECT CARD 3D TILT
+   ============================================ */
+function initProjectTilt() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce), (hover: none)').matches) return;
+
+    document.querySelectorAll('.project-card').forEach(card => {
+        card.addEventListener('pointermove', event => {
+            const bounds = card.getBoundingClientRect();
+            const x = (event.clientX - bounds.left) / bounds.width;
+            const y = (event.clientY - bounds.top) / bounds.height;
+            const rotateY = (x - 0.5) * 10;
+            const rotateX = (0.5 - y) * 8;
+
+            card.style.transform = `translateY(-8px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            card.style.setProperty('--glare-x', `${x * 100}%`);
+            card.style.setProperty('--glare-y', `${y * 100}%`);
+            card.classList.add('is-tilting');
+        });
+
+        card.addEventListener('pointerleave', () => {
+            card.style.transform = '';
+            card.classList.remove('is-tilting');
         });
     });
 }
