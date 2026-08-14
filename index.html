@@ -9,6 +9,68 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Inline styles for Microsoft Fabric section (kept local for easy iteration) -->
+    <style>
+    /* Microsoft Fabric section styles */
+    .fabric {
+        background: linear-gradient(180deg, rgba(15,23,42,0.95), rgba(15,23,42,0.95));
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+    .fabric-header { text-align: center; margin-bottom: 28px; }
+    .fabric-desc { color: var(--text-secondary); max-width:800px; margin: 0 auto 28px; }
+
+    .fabric-diagram {
+        display:flex; flex-wrap:wrap; gap:20px; align-items:center; justify-content:center;
+        --node-size: 160px;
+    }
+
+    .fabric-node {
+        width: var(--node-size);
+        min-width: 140px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+        border: 1px solid rgba(71,85,105,0.25);
+        padding: 16px;
+        border-radius: 12px;
+        text-align:center;
+        color: var(--text-primary);
+        position: relative;
+        transition: transform 220ms ease, box-shadow 220ms ease;
+        cursor: pointer;
+    }
+
+    .fabric-node:focus { outline: 2px solid rgba(99,102,241,0.25); outline-offset: 4px; }
+
+    .fabric-node .node-icon {
+        width:56px; height:56px; margin: 0 auto 8px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; color:white;
+        background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+        box-shadow: 0 6px 18px rgba(6,182,212,0.08);
+    }
+
+    .fabric-node h4 { font-size: 0.98rem; margin: 8px 0 6px; }
+    .fabric-node p { color: var(--text-muted); font-size: 0.85rem; margin:0; }
+
+    /* connectors for large screens (visual only) */
+    .fabric-diagram .connector {
+        width: 40px; height: 2px; background: linear-gradient(90deg, rgba(99,102,241,0.6), rgba(6,182,212,0.6)); align-self:center; border-radius:4px;
+    }
+
+    /* tooltip (hover) */
+    .fabric-node .tooltip {
+        display:none; position:absolute; left:50%; transform:translateX(-50%); bottom:calc(100% + 12px); width:260px; background:var(--bg-card); border:1px solid var(--border); padding:12px; border-radius:8px; color:var(--text-secondary); font-size:0.85rem; box-shadow:var(--shadow-lg); z-index:50;
+    }
+    .fabric-node .tooltip::after { content:''; position:absolute; left:50%; transform:translateX(-50%); top:100%; width:0; height:0; border-left:8px solid transparent; border-right:8px solid transparent; border-top:8px solid var(--bg-card); }
+    .fabric-node:hover .tooltip, .fabric-node:focus .tooltip { display:block; }
+
+    /* responsive stacking */
+    @media (max-width: 900px) {
+        .fabric-diagram { flex-direction:column; }
+        .fabric-diagram .connector { display:none; }
+        .fabric-node { width: 100%; max-width:520px; }
+        .fabric-node .tooltip { left: calc(100% + 12px); transform:none; top:50%; bottom:auto; }
+    }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -23,6 +85,7 @@
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#home" class="nav-link active">Home</a></li>
                 <li><a href="#expertise" class="nav-link">Expertise</a></li>
+                <li><a href="#fabric" class="nav-link">Fabric</a></li>
                 <li><a href="#projects" class="nav-link">Projects</a></li>
                 <li><a href="#process" class="nav-link">Process</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
@@ -128,6 +191,84 @@
                         <span>Copilot</span><span>LLM</span><span>MCP</span><span>Power Automate</span>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Microsoft Fabric Section -->
+    <section id="fabric" class="fabric">
+        <div class="container">
+            <div class="fabric-header">
+                <span class="section-tag">Microsoft Fabric</span>
+                <h2 class="section-title">Fabric: Governed Lakehouse & Analytics Platform</h2>
+                <p class="fabric-desc">A governed, scalable, and secure analytics platform built on Microsoft Fabric Gen2 — integrating ERP sources through Fabric Dataflows into a curated Lakehouse, orchestrated by Fabric Pipelines, exposed through semantic models with RLS/CLS and consumed in Power BI.</p>
+            </div>
+
+            <div class="fabric-diagram" role="list">
+                <div class="fabric-node" role="listitem" tabindex="0" data-tooltip="ERP systems (Business Central / Dynamics 365) as transactional source systems. Capture full history and change tracking where possible.">
+                    <div class="node-icon"><i class="fas fa-building"></i></div>
+                    <h4>ERP Source<br><small>Business Central / D365</small></h4>
+                    <p class="node-sub">Transactional data & master records</p>
+                    <div class="tooltip">ERP systems (Business Central / Dynamics 365) — primary transactional sources. Use CDC or incremental extraction to Fabric Dataflows.</div>
+                </div>
+
+                <div class="connector" aria-hidden="true"></div>
+
+                <div class="fabric-node" role="listitem" tabindex="0" data-tooltip="Fabric Gen2 Dataflows perform Power Query-driven ETL/ELT: schema mapping, cleaning, type coercion, and data quality validations with built-in lineage.">
+                    <div class="node-icon"><i class="fas fa-stream"></i></div>
+                    <h4>Fabric Gen2 Dataflows<br><small>Power Query</small></h4>
+                    <p class="node-sub">ETL/ELT & validations</p>
+                    <div class="tooltip">Fabric Gen2 Dataflows: Power Query transformations, validations, basic profiling and column-level checks. Lineage and monitoring available in Fabric.</div>
+                </div>
+
+                <div class="connector" aria-hidden="true"></div>
+
+                <div class="fabric-node" role="listitem" tabindex="0" data-tooltip="Curated Lakehouse tables (delta) that serve as the single source of truth for analytics and model training.">
+                    <div class="node-icon"><i class="fas fa-database"></i></div>
+                    <h4>Lakehouse<br><small>Curated tables</small></h4>
+                    <p class="node-sub">Trusted analytics tables</p>
+                    <div class="tooltip">Lakehouse (delta tables) for curated, clean, query-ready datasets. Implement partitioning, compaction, and time travel policies.</div>
+                </div>
+
+                <div class="connector" aria-hidden="true"></div>
+
+                <div class="fabric-node" role="listitem" tabindex="0" data-tooltip="Fabric Pipelines orchestrate PySpark notebooks and jobs for analysis, aggregations, and quick ML tasks — integrated with compute and lifecycle management.">
+                    <div class="node-icon"><i class="fas fa-play-circle"></i></div>
+                    <h4>Fabric Pipelines<br><small>PySpark orchestration</small></h4>
+                    <p class="node-sub">Batch & scheduled processing</p>
+                    <div class="tooltip">Fabric Pipelines schedule and orchestrate notebooks and jobs. Use them for ETL orchestration, retraining models, and downstream aggregations.</div>
+                </div>
+
+                <div class="connector" aria-hidden="true"></div>
+
+                <div class="fabric-node" role="listitem" tabindex="0" data-tooltip="Semantic models define relationships, measures and business logic; publish models for Power BI consumption and centralized governance.">
+                    <div class="node-icon"><i class="fas fa-layer-group"></i></div>
+                    <h4>Semantic Models<br><small>Relationships & measures</small></h4>
+                    <p class="node-sub">Curated business logic</p>
+                    <div class="tooltip">Semantic models (Fabric / Power BI) expose standardized measures and relationships. Version and certify models for self-service analytics.</div>
+                </div>
+
+                <div class="connector" aria-hidden="true"></div>
+
+                <div class="fabric-node" role="listitem" tabindex="0" data-tooltip="Security controls: Row-Level Security (RLS) and Column-Level Security (CLS) enforced at model or lakehouse level to meet data privacy requirements.">
+                    <div class="node-icon"><i class="fas fa-lock"></i></div>
+                    <h4>RLS & CLS<br><small>Security</small></h4>
+                    <p class="node-sub">Fine-grained access control</p>
+                    <div class="tooltip">Enforce RLS and CLS in semantic models and on Lakehouse access. Combine with Fabric policies and Purview for governance.</div>
+                </div>
+
+                <div class="connector" aria-hidden="true"></div>
+
+                <div class="fabric-node" role="listitem" tabindex="0" data-tooltip="Power BI reports and dashboards consume the certified semantic models and Lakehouse datasets; provide self-service and governed delivery to stakeholders.">
+                    <div class="node-icon"><i class="fas fa-chart-line"></i></div>
+                    <h4>Consumption<br><small>Power BI</small></h4>
+                    <p class="node-sub">Reports & dashboards</p>
+                    <div class="tooltip">Power BI consumes semantic models and the Lakehouse. Deliver operational reports, paginated reports and analytical dashboards with governed refresh schedules.</div>
+                </div>
+            </div>
+
+            <div style="text-align:center; margin-top:22px; color:var(--text-secondary);">
+                <em>Business value: A governed Fabric-based platform ensures trusted data, faster time-to-insight, simplified ML workflows, and secure consumption for enterprise stakeholders.</em>
             </div>
         </div>
     </section>
