@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Credit Scoring Architecture</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0b1020; --panel:#151d35; --line:#6474a8; --text:#f5f7ff; --muted:#b7c0df; --accent:#8b7cff; --good:#42d7a4; }
+    * { box-sizing:border-box; } body { margin:0; min-width:980px; background:radial-gradient(circle at 15% 0,#25245c,transparent 35%),var(--bg); color:var(--text); font:16px/1.4 system-ui,-apple-system,Segoe UI,sans-serif; }
+    main { max-width:1320px; margin:auto; padding:44px; } h1 { margin:0; font-size:36px; } .subtitle { color:var(--muted); margin:8px 0 34px; }
+    .diagram { display:grid; grid-template-columns:repeat(4,1fr); gap:44px 28px; position:relative; } .diagram::before { content:""; position:absolute; top:122px; left:12%; width:76%; border-top:2px solid var(--line); z-index:0; }
+    .stage { position:relative; z-index:1; } .stage h2 { color:#b9b1ff; font-size:14px; letter-spacing:.12em; text-transform:uppercase; margin:0 0 12px; }
+    .card { background:linear-gradient(150deg,#1d294a,#12192e); border:1px solid #34436d; border-radius:14px; padding:18px; min-height:144px; box-shadow:0 14px 28px #0004; }
+    .card strong { display:block; font-size:19px; margin-bottom:8px; } .card p { color:var(--muted); font-size:14px; margin:0; } .icon { color:var(--accent); font-size:26px; margin-bottom:9px; }
+    .arrow { color:var(--line); position:absolute; top:111px; right:-23px; font-size:26px; } .stage:last-child .arrow { display:none; }
+    .outcomes { margin-top:52px; padding:22px; border-left:4px solid var(--good); background:#102d2d; border-radius:0 12px 12px 0; } .outcomes b { color:var(--good); }
+    footer { color:var(--muted); font-size:13px; margin-top:32px; }
+  </style>
+</head>
+<body><main>
+  <h1>Production Credit Scoring Architecture</h1>
+  <p class="subtitle">Governed model training, real-time decisions, and continuous performance monitoring for microfinance lending.</p>
+  <section class="diagram" aria-label="Credit scoring data flow">
+    <article class="stage"><h2>1. Data sources</h2><div class="card"><div class="icon">◫</div><strong>Loan &amp; customer data</strong><p>Applications, repayment history, bureau attributes, and transaction signals enter through secure batch and API feeds.</p></div><span class="arrow">→</span></article>
+    <article class="stage"><h2>2. Data platform</h2><div class="card"><div class="icon">⌘</div><strong>Azure data lake</strong><p>Validated raw and curated zones retain lineage. Databricks pipelines clean, join, and version feature datasets.</p></div><span class="arrow">→</span></article>
+    <article class="stage"><h2>3. ML lifecycle</h2><div class="card"><div class="icon">◈</div><strong>Train &amp; register</strong><p>Logistic Regression and Random Forest experiments are tracked, evaluated for fairness, and promoted through a model registry.</p></div><span class="arrow">→</span></article>
+    <article class="stage"><h2>4. Decisioning</h2><div class="card"><div class="icon">✓</div><strong>FastAPI scoring service</strong><p>Authenticated applications receive probability of default, risk band, reason codes, and a manual-review route when required.</p></div></article>
+  </section>
+  <section class="outcomes"><b>Feedback loop:</b> Approved-loan outcomes, defaults, latency, drift, and fairness metrics return to monitoring. Threshold breaches trigger review and scheduled retraining through CI/CD.</section>
+  <footer>Architecture diagram · Credit scoring portfolio project</footer>
+</main></body></html>
