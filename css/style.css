@@ -1499,3 +1499,18 @@ section {
     background: rgba(99, 102, 241, 0.3);
     color: var(--text-primary);
 }
+
+/* Evidence-led redesign and accessibility */
+.hero-intro { color: var(--accent); font: 500 0.95rem 'JetBrains Mono', monospace; margin-bottom: 16px; }
+body.menu-open { overflow: hidden; }
+.project-metric { display: flex; align-items: baseline; gap: 8px; margin: 18px 0; color: var(--text-secondary); font-size: .8rem; }
+.project-metric strong { color: var(--accent); font-size: 1.35rem; font-weight: 800; }
+.case-study-btn { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 10px; padding: 12px 16px; background: rgba(99,102,241,.14); border: 1px solid rgba(129,140,248,.45); border-radius: var(--radius-sm); color: var(--text-primary); font: 600 .9rem inherit; cursor: pointer; transition: var(--transition); }
+.case-study-btn:hover { background: var(--gradient-1); border-color: transparent; transform: translateY(-2px); }
+.evidence-timeline .timeline-content { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; flex: 1; }
+.evidence-timeline .timeline-content::before { content: 'DATA FLOW'; display: block; margin-bottom: 8px; color: var(--accent); font: 600 .7rem 'JetBrains Mono', monospace; letter-spacing: .12em; }
+.portrait-placeholder { min-height: 190px; margin-bottom: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: 1px dashed var(--primary-light); border-radius: var(--radius); background: linear-gradient(145deg, rgba(99,102,241,.15), rgba(6,182,212,.08)); color: var(--text-secondary); text-align: center; }
+.portrait-placeholder i { color: var(--accent); font-size: 3rem; }.portrait-placeholder span { color: var(--text-primary); font-weight: 700; }.portrait-placeholder small { color: var(--text-muted); }
+.contact-form-intro { margin-bottom: 24px; }.contact-form-intro h3 { margin: 8px 0; font-size: 1.5rem; }.contact-form-intro p { color: var(--text-secondary); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } .hero-particles, .scroll-indicator { display: none; } }
