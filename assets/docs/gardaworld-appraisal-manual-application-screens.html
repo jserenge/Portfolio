@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GardaWorld — Performance Appraisal System Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#DA1A32;
+    --red-dim:#f6e2e4;
+    --ink:#17181A;
+    --grey:#5B5F66;
+    --line:#E7E6E4;
+    --paper:#FAFAF9;
+    --white:#FFFFFF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.eyebrow{font-family:'Archivo',sans-serif;}
+
+  /* ---- Layout shell ---- */
+  .shell{display:flex; max-width:1180px; margin:0 auto;}
+  nav.side{
+    width:230px; flex-shrink:0; position:sticky; top:0; height:100vh;
+    padding:40px 20px 40px 32px; border-right:1px solid var(--line);
+    overflow-y:auto;
+  }
+  nav.side .brand{display:flex; align-items:baseline; gap:2px; margin-bottom:48px;}
+  nav.side .brand span{font-family:'Archivo'; font-weight:800; font-size:15px; letter-spacing:0.5px;}
+  nav.side .brand .g{color:var(--red);}
+  nav.side .brand .w{color:var(--ink);}
+  nav.side a{
+    display:block; font-size:13px; color:var(--grey); text-decoration:none;
+    padding:7px 0; border-left:2px solid transparent; padding-left:12px;
+    margin-left:-13px; transition:color .15s, border-color .15s;
+  }
+  nav.side a:hover{color:var(--ink);}
+  nav.side a.active{color:var(--red); border-left-color:var(--red); font-weight:600;}
+  nav.side .navgroup{margin-bottom:26px;}
+  nav.side .navgroup .label{
+    font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px; color:#AFAFAF;
+    margin-bottom:8px; font-weight:600;
+  }
+
+  main{flex:1; min-width:0;}
+
+  /* ---- Hero ---- */
+  .hero{
+    padding:88px 64px 64px 64px; border-bottom:1px solid var(--line);
+    background:var(--white);
+  }
+  .eyebrow{
+    font-size:11.5px; letter-spacing:2px; text-transform:uppercase; color:var(--red);
+    font-weight:700; margin-bottom:18px;
+  }
+  .hero h1{
+    font-size:44px; font-weight:800; letter-spacing:-1px; line-height:1.08;
+    max-width:640px; margin-bottom:20px;
+  }
+  .hero p.lede{font-size:16px; color:var(--grey); max-width:520px;}
+  .hero .roles-row{display:flex; gap:12px; margin-top:36px; flex-wrap:wrap;}
+  .pill{
+    font-size:12.5px; font-weight:600; padding:7px 14px; border-radius:100px;
+    border:1px solid var(--line); color:var(--grey); background:var(--paper);
+  }
+
+  section{padding:56px 64px; border-bottom:1px solid var(--line);}
+  section:last-of-type{border-bottom:none;}
+  .section-head{margin-bottom:32px;}
+  .section-num{font-size:12px; color:var(--red); font-weight:700; letter-spacing:1px; margin-bottom:8px;}
+  section h2{font-size:26px; font-weight:700; letter-spacing:-0.4px;}
+  section h3{font-size:15px; font-weight:600; margin-bottom:10px;}
+  section p.intro{color:var(--grey); font-size:14.5px; max-width:640px; margin-top:10px;}
+
+  /* ---- Card grids ---- */
+  .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:8px;}
+  .grid.two{grid-template-columns:repeat(2,1fr);}
+  .card{
+    border:1px solid var(--line); border-radius:10px; padding:22px 20px;
+    background:var(--white); transition:border-color .15s, transform .15s;
+  }
+  .card:hover{border-color:var(--red);}
+  .card .k{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:30px; height:30px; border-radius:7px; background:var(--red-dim);
+    color:var(--red); font-weight:700; font-size:13px; font-family:'Archivo'; margin-bottom:14px;
+  }
+  .card h4{font-size:14.5px; font-weight:700; margin-bottom:8px;}
+  .card ul{padding-left:16px; color:var(--grey); font-size:13.3px;}
+  .card ul li{margin-bottom:5px;}
+  .card p{color:var(--grey); font-size:13.3px;}
+
+  /* ---- Workflow stepper (signature element) ---- */
+  .stepper{
+    display:flex; align-items:flex-start; gap:0; margin-top:12px; overflow-x:auto;
+    padding-bottom:8px;
+  }
+  .step{flex:1; min-width:130px; position:relative; padding-right:18px;}
+  .step .dot{
+    width:30px; height:30px; border-radius:50%; background:var(--white);
+    border:2px solid var(--red); color:var(--red); font-family:'Archivo'; font-weight:700;
+    font-size:13px; display:flex; align-items:center; justify-content:center; margin-bottom:14px;
+    position:relative; z-index:1;
+  }
+  .step:not(:last-child)::after{
+    content:''; position:absolute; top:15px; left:30px; right:0; height:2px;
+    background:var(--line);
+  }
+  .step p{font-size:12.8px; color:var(--grey); line-height:1.5;}
+
+  /* ---- Status badges ---- */
+  .status-row{display:flex; gap:14px; margin-top:8px;}
+  .status{
+    flex:1; border:1px solid var(--line); border-radius:10px; padding:18px 20px; background:var(--white);
+  }
+  .status .tag{
+    display:inline-block; font-size:11px; font-weight:700; letter-spacing:0.5px;
+    padding:4px 10px; border-radius:100px; margin-bottom:10px;
+  }
+  .status.approved .tag{background:#E6F4EA; color:#1E7D3B;}
+  .status.rejected .tag{background:var(--red-dim); color:var(--red);}
+  .status p{font-size:13px; color:var(--grey);}
+
+  /* ---- Notification list ---- */
+  .notif-list{list-style:none; margin-top:8px;}
+  .notif-list li{
+    display:flex; align-items:flex-start; gap:14px; padding:14px 0;
+    border-bottom:1px solid var(--line); font-size:13.8px; color:var(--ink);
+  }
+  .notif-list li:last-child{border-bottom:none;}
+  .notif-list .bell{color:var(--red); font-weight:700; font-family:'Archivo'; font-size:12px; flex-shrink:0; margin-top:2px;}
+
+  footer{padding:36px 64px; text-align:center; color:#B7B7B4; font-size:12px;}
+
+  @media (max-width:920px){
+    nav.side{display:none;}
+    .hero{padding:56px 28px 40px;}
+    section{padding:40px 28px;}
+    .grid, .grid.two{grid-template-columns:1fr;}
+    .status-row{flex-direction:column;}
+    .hero h1{font-size:32px;}
+  }
+
+/* ---- Visual illustrations ---- */
+.visual{
+  margin: 0 0 34px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+  background:var(--white);
+}
+.visual img{display:block;width:100%;height:auto;}
+.visual figcaption{
+  padding:9px 14px;
+  font-size:11px;
+  color:#8A8D92;
+  border-top:1px solid var(--line);
+  background:#FCFCFB;
+}
+.hero .visual{margin-top:38px;max-width:760px;}
+@media (max-width:920px){.hero .visual{margin-top:28px;}}
+
+
+.application-screen{margin-top:24px;box-shadow:0 2px 10px rgba(20,25,30,.05);}
+.application-screen img{background:#f3f4f5;}
+.visual figcaption{font-style:normal;}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <nav class="side" id="sidenav">
+    <div class="brand"><span class="g">GARDA</span><span class="w">WORLD</span></div>
+    <div class="navgroup">
+      <div class="label">Overview</div>
+      <a href="#intro">Introduction</a>
+      <a href="#roles">Roles &amp; Responsibilities</a>
+    </div>
+    <div class="navgroup">
+      <div class="label">Employee</div>
+      <a href="#employee">Employee Application</a>
+    </div>
+    <div class="navgroup">
+      <div class="label">Manager</div>
+      <a href="#manager">Manager Application</a>
+    </div>
+    <div class="navgroup">
+      <div class="label">Process</div>
+      <a href="#workflow">Appraisal Workflow</a>
+      <a href="#notifications">Notifications</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="hero">
+      <div class="eyebrow">User Manual</div>
+      <h1>Performance Appraisal System</h1>
+      <p class="lede">A structured, transparent, and auditable process for setting goals, reviewing progress, and closing out the year — built around three roles working in sync.</p>
+      <figure class="visual"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgdmlld0JveD0iMCAwIDEyMDAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgZmlsbD0iI2YzZjRmNSIvPgogICAgCiAgICA8cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSIxMTYwIiBoZWlnaHQ9Ijc4IiByeD0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2RmZTFlMyIvPgogICAgPHRleHQgeD0iNDgiIHk9IjcyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDIiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiNlZjJiMjUiPkdBUkRBPC90ZXh0PgogICAgPHRleHQgeD0iMjE4IiB5PSI3MiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjQyIiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjNWE1ZDYzIj5XT1JMRDwvdGV4dD4KICAgIDxjaXJjbGUgY3g9IjExMzUiIGN5PSI1OSIgcj0iMjUiIGZpbGw9IiNmN2VhZDAiLz4KICAgIDx0ZXh0IHg9IjExMzUiIHk9IjY3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM4YjZjMzUiPkpTPC90ZXh0PgogICAgCiAgICAgICAgPHJlY3QgeD0iMzUiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIxNjUiIHJ4PSI4IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8cmVjdCB4PSIzNSIgeT0iMTM1IiB3aWR0aD0iMzU1IiBoZWlnaHQ9IjgyIiByeD0iOCIgZmlsbD0iI2Q5ZGVlMyIvPgogICAgICAgIDxyZWN0IHg9IjM1IiB5PSIxOTUiIHdpZHRoPSIzNTUiIGhlaWdodD0iMjIiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8Y2lyY2xlIGN4PSIzNTYiIGN5PSIxNjMiIHI9IjE0IiBmaWxsPSIjZWYyYjI1IiBvcGFjaXR5PSIuOSIvPgogICAgICAgIDx0ZXh0IHg9IjIxMi41IiB5PSIyNTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzMwMzQzYSI+RW1wbG95ZWUgSW5mb3JtYXRpb24gU2VjdGlvbjwvdGV4dD4KICAgICAgICA8dGV4dCB4PSIyMTIuNSIgeT0iMjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM4NThhOTAiPlBFUlNPTjwvdGV4dD4KICAgICAgICAKICAgICAgICA8cmVjdCB4PSI0MTAiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIxNjUiIHJ4PSI4IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8cmVjdCB4PSI0MTAiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSI4MiIgcng9IjgiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8cmVjdCB4PSI0MTAiIHk9IjE5NSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIyMiIgZmlsbD0iI2Q5ZGVlMyIvPgogICAgICAgIDxjaXJjbGUgY3g9IjczMSIgY3k9IjE2MyIgcj0iMTQiIGZpbGw9IiNlZjJiMjUiIG9wYWNpdHk9Ii45Ii8+CiAgICAgICAgPHRleHQgeD0iNTg3LjUiIHk9IjI1NCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMzAzNDNhIj5TdGFydCBGWSBHb2FsIFNldHRpbmc8L3RleHQ+CiAgICAgICAgPHRleHQgeD0iNTg3LjUiIHk9IjI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjExIiBmaWxsPSIjODU4YTkwIj5HT0FMUzwvdGV4dD4KICAgICAgICAKICAgICAgICA8cmVjdCB4PSI3ODUiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIxNjUiIHJ4PSI4IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8cmVjdCB4PSI3ODUiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSI4MiIgcng9IjgiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8cmVjdCB4PSI3ODUiIHk9IjE5NSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIyMiIgZmlsbD0iI2Q5ZGVlMyIvPgogICAgICAgIDxjaXJjbGUgY3g9IjExMDYiIGN5PSIxNjMiIHI9IjE0IiBmaWxsPSIjZWYyYjI1IiBvcGFjaXR5PSIuOSIvPgogICAgICAgIDx0ZXh0IHg9Ijk2Mi41IiB5PSIyNTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzMwMzQzYSI+TWlkIFllYXIgUmV2aWV3PC90ZXh0PgogICAgICAgIDx0ZXh0IHg9Ijk2Mi41IiB5PSIyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzg1OGE5MCI+TUlEPC90ZXh0PgogICAgICAgIAogICAgICAgIDxyZWN0IHg9IjM1IiB5PSIzMjAiIHdpZHRoPSI1NDAiIGhlaWdodD0iMTY1IiByeD0iOCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZDlkY2RmIi8+CiAgICAgICAgPHJlY3QgeD0iMzUiIHk9IjMyMCIgd2lkdGg9IjU0MCIgaGVpZ2h0PSI4MiIgcng9IjgiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8cmVjdCB4PSIzNSIgeT0iMzgwIiB3aWR0aD0iNTQwIiBoZWlnaHQ9IjIyIiBmaWxsPSIjZDlkZWUzIi8+CiAgICAgICAgPGNpcmNsZSBjeD0iNTQxIiBjeT0iMzQ4IiByPSIxNCIgZmlsbD0iI2VmMmIyNSIgb3BhY2l0eT0iLjkiLz4KICAgICAgICA8dGV4dCB4PSIzMDUuMCIgeT0iNDM5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMzMDM0M2EiPkVuZCBZZWFyIFJldmlldzwvdGV4dD4KICAgICAgICA8dGV4dCB4PSIzMDUuMCIgeT0iNDY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM4NThhOTAiPkVORDwvdGV4dD4KICAgICAgICAKICAgICAgICA8cmVjdCB4PSI1OTUiIHk9IjMyMCIgd2lkdGg9IjU0NSIgaGVpZ2h0PSIxNjUiIHJ4PSI4IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8cmVjdCB4PSI1OTUiIHk9IjMyMCIgd2lkdGg9IjU0NSIgaGVpZ2h0PSI4MiIgcng9IjgiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8cmVjdCB4PSI1OTUiIHk9IjM4MCIgd2lkdGg9IjU0NSIgaGVpZ2h0PSIyMiIgZmlsbD0iI2Q5ZGVlMyIvPgogICAgICAgIDxjaXJjbGUgY3g9IjExMDYiIGN5PSIzNDgiIHI9IjE0IiBmaWxsPSIjZWYyYjI1IiBvcGFjaXR5PSIuOSIvPgogICAgICAgIDx0ZXh0IHg9Ijg2Ny41IiB5PSI0MzkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzMwMzQzYSI+TXkgQXBwcmFpc2FsczwvdGV4dD4KICAgICAgICA8dGV4dCB4PSI4NjcuNSIgeT0iNDY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM4NThhOTAiPkhJU1RPUlk8L3RleHQ+CiAgICAgICAgCiAgICA8L3N2Zz4=" alt="GardaWorld appraisal application — illustrative dashboard"><figcaption>GardaWorld appraisal application — illustrative dashboard</figcaption></figure>
+      <div class="roles-row">
+        <span class="pill">Employee application</span>
+        <span class="pill">Manager application</span>
+        <span class="pill">Automated workflow</span>
+      </div>
+    </div>
+
+    <section id="intro">
+      <div class="section-head">
+        <div class="section-num">01 — Introduction</div>
+        <h2>What the system does</h2>
+        <p class="intro">The system supports employees defining and tracking goals, managers reviewing and approving submissions, and HR automating workflow initiation and notifications — all in one auditable trail.</p>
+      </div>
+      <figure class="visual"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgdmlld0JveD0iMCAwIDEyMDAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgZmlsbD0iI2YzZjRmNSIvPgogICAgCiAgICA8cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSIxMTYwIiBoZWlnaHQ9Ijc4IiByeD0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2RmZTFlMyIvPgogICAgPHRleHQgeD0iNDgiIHk9IjcyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDIiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiNlZjJiMjUiPkdBUkRBPC90ZXh0PgogICAgPHRleHQgeD0iMjE4IiB5PSI3MiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjQyIiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjNWE1ZDYzIj5XT1JMRDwvdGV4dD4KICAgIDxjaXJjbGUgY3g9IjExMzUiIGN5PSI1OSIgcj0iMjUiIGZpbGw9IiNmN2VhZDAiLz4KICAgIDx0ZXh0IHg9IjExMzUiIHk9IjY3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM4YjZjMzUiPkpTPC90ZXh0PgogICAgCiAgICAgICAgPHJlY3QgeD0iMzUiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIxNjUiIHJ4PSI4IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8cmVjdCB4PSIzNSIgeT0iMTM1IiB3aWR0aD0iMzU1IiBoZWlnaHQ9IjgyIiByeD0iOCIgZmlsbD0iI2Q5ZGVlMyIvPgogICAgICAgIDxyZWN0IHg9IjM1IiB5PSIxOTUiIHdpZHRoPSIzNTUiIGhlaWdodD0iMjIiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8Y2lyY2xlIGN4PSIzNTYiIGN5PSIxNjMiIHI9IjE0IiBmaWxsPSIjZWYyYjI1IiBvcGFjaXR5PSIuOSIvPgogICAgICAgIDx0ZXh0IHg9IjIxMi41IiB5PSIyNTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzMwMzQzYSI+RW1wbG95ZWUgSW5mb3JtYXRpb24gU2VjdGlvbjwvdGV4dD4KICAgICAgICA8dGV4dCB4PSIyMTIuNSIgeT0iMjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM4NThhOTAiPlBFUlNPTjwvdGV4dD4KICAgICAgICAKICAgICAgICA8cmVjdCB4PSI0MTAiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIxNjUiIHJ4PSI4IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8cmVjdCB4PSI0MTAiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSI4MiIgcng9IjgiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8cmVjdCB4PSI0MTAiIHk9IjE5NSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIyMiIgZmlsbD0iI2Q5ZGVlMyIvPgogICAgICAgIDxjaXJjbGUgY3g9IjczMSIgY3k9IjE2MyIgcj0iMTQiIGZpbGw9IiNlZjJiMjUiIG9wYWNpdHk9Ii45Ii8+CiAgICAgICAgPHRleHQgeD0iNTg3LjUiIHk9IjI1NCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMzAzNDNhIj5TdGFydCBGWSBHb2FsIFNldHRpbmc8L3RleHQ+CiAgICAgICAgPHRleHQgeD0iNTg3LjUiIHk9IjI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjExIiBmaWxsPSIjODU4YTkwIj5HT0FMUzwvdGV4dD4KICAgICAgICAKICAgICAgICA8cmVjdCB4PSI3ODUiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIxNjUiIHJ4PSI4IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8cmVjdCB4PSI3ODUiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSI4MiIgcng9IjgiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8cmVjdCB4PSI3ODUiIHk9IjE5NSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIyMiIgZmlsbD0iI2Q5ZGVlMyIvPgogICAgICAgIDxjaXJjbGUgY3g9IjExMDYiIGN5PSIxNjMiIHI9IjE0IiBmaWxsPSIjZWYyYjI1IiBvcGFjaXR5PSIuOSIvPgogICAgICAgIDx0ZXh0IHg9Ijk2Mi41IiB5PSIyNTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzMwMzQzYSI+TWlkIFllYXIgUmV2aWV3PC90ZXh0PgogICAgICAgIDx0ZXh0IHg9Ijk2Mi41IiB5PSIyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzg1OGE5MCI+TUlEPC90ZXh0PgogICAgICAgIAogICAgICAgIDxyZWN0IHg9IjM1IiB5PSIzMjAiIHdpZHRoPSI1NDAiIGhlaWdodD0iMTY1IiByeD0iOCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZDlkY2RmIi8+CiAgICAgICAgPHJlY3QgeD0iMzUiIHk9IjMyMCIgd2lkdGg9IjU0MCIgaGVpZ2h0PSI4MiIgcng9IjgiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8cmVjdCB4PSIzNSIgeT0iMzgwIiB3aWR0aD0iNTQwIiBoZWlnaHQ9IjIyIiBmaWxsPSIjZDlkZWUzIi8+CiAgICAgICAgPGNpcmNsZSBjeD0iNTQxIiBjeT0iMzQ4IiByPSIxNCIgZmlsbD0iI2VmMmIyNSIgb3BhY2l0eT0iLjkiLz4KICAgICAgICA8dGV4dCB4PSIzMDUuMCIgeT0iNDM5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMzMDM0M2EiPkVuZCBZZWFyIFJldmlldzwvdGV4dD4KICAgICAgICA8dGV4dCB4PSIzMDUuMCIgeT0iNDY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM4NThhOTAiPkVORDwvdGV4dD4KICAgICAgICAKICAgICAgICA8cmVjdCB4PSI1OTUiIHk9IjMyMCIgd2lkdGg9IjU0NSIgaGVpZ2h0PSIxNjUiIHJ4PSI4IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8cmVjdCB4PSI1OTUiIHk9IjMyMCIgd2lkdGg9IjU0NSIgaGVpZ2h0PSI4MiIgcng9IjgiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8cmVjdCB4PSI1OTUiIHk9IjM4MCIgd2lkdGg9IjU0NSIgaGVpZ2h0PSIyMiIgZmlsbD0iI2Q5ZGVlMyIvPgogICAgICAgIDxjaXJjbGUgY3g9IjExMDYiIGN5PSIzNDgiIHI9IjE0IiBmaWxsPSIjZWYyYjI1IiBvcGFjaXR5PSIuOSIvPgogICAgICAgIDx0ZXh0IHg9Ijg2Ny41IiB5PSI0MzkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzMwMzQzYSI+TXkgQXBwcmFpc2FsczwvdGV4dD4KICAgICAgICA8dGV4dCB4PSI4NjcuNSIgeT0iNDY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM4NThhOTAiPkhJU1RPUlk8L3RleHQ+CiAgICAgICAgCiAgICA8L3N2Zz4=" alt="Employee / manager role context — illustrative application screen"><figcaption>Employee / manager role context — illustrative application screen</figcaption></figure>
+      <div class="grid">
+        <div class="card">
+          <div class="k">E</div>
+          <h4>Employees</h4>
+          <p>Define and track goals through the year, and submit each stage for manager review.</p>
+        </div>
+        <div class="card">
+          <div class="k">M</div>
+          <h4>Managers</h4>
+          <p>Review each submission, and approve or request changes with comments.</p>
+        </div>
+        <div class="card">
+          <div class="k">HR</div>
+          <h4>HR / Automation</h4>
+          <p>Automates workflow initiation, status updates, and notifications across the cycle.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="roles">
+      <div class="section-head">
+        <div class="section-num">02 — Roles &amp; Responsibilities</div>
+        <h2>Who owns what</h2>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <h4>Employee</h4>
+          <ul>
+            <li>Complete personal information</li>
+            <li>Define goals at Start of Financial Year</li>
+            <li>Participate in Mid-Year and End-Year reviews</li>
+            <li>Submit appraisals for manager review</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>Manager</h4>
+          <ul>
+            <li>Review submitted appraisals</li>
+            <li>Approve or reject with feedback</li>
+            <li>Ensure reviews complete within timelines</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>System Automation</h4>
+          <ul>
+            <li>Initiate appraisal cycles</li>
+            <li>Send notifications when action is required</li>
+            <li>Update status based on approvals or rejections</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="employee">
+      <div class="section-head">
+        <div class="section-num">03 — Employee Application</div>
+        <h2>Five sections, one dashboard</h2>
+        <p class="intro">Logging in presents the employee with a dashboard covering every stage of the appraisal — from personal details through to a full history of past reviews.</p>
+      <figure class="visual application-screen"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgdmlld0JveD0iMCAwIDEyMDAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgZmlsbD0iI2YzZjRmNSIvPgogICAgCiAgICA8cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSIxMTYwIiBoZWlnaHQ9Ijc4IiByeD0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2RmZTFlMyIvPgogICAgPHRleHQgeD0iNDgiIHk9IjcyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDIiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiNlZjJiMjUiPkdBUkRBPC90ZXh0PgogICAgPHRleHQgeD0iMjE4IiB5PSI3MiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjQyIiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjNWE1ZDYzIj5XT1JMRDwvdGV4dD4KICAgIDxjaXJjbGUgY3g9IjExMzUiIGN5PSI1OSIgcj0iMjUiIGZpbGw9IiNmN2VhZDAiLz4KICAgIDx0ZXh0IHg9IjExMzUiIHk9IjY3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM4YjZjMzUiPkpTPC90ZXh0PgogICAgCiAgICAgICAgPHJlY3QgeD0iMzUiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIxNjUiIHJ4PSI4IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8cmVjdCB4PSIzNSIgeT0iMTM1IiB3aWR0aD0iMzU1IiBoZWlnaHQ9IjgyIiByeD0iOCIgZmlsbD0iI2Q5ZGVlMyIvPgogICAgICAgIDxyZWN0IHg9IjM1IiB5PSIxOTUiIHdpZHRoPSIzNTUiIGhlaWdodD0iMjIiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8Y2lyY2xlIGN4PSIzNTYiIGN5PSIxNjMiIHI9IjE0IiBmaWxsPSIjZWYyYjI1IiBvcGFjaXR5PSIuOSIvPgogICAgICAgIDx0ZXh0IHg9IjIxMi41IiB5PSIyNTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzMwMzQzYSI+RW1wbG95ZWUgSW5mb3JtYXRpb24gU2VjdGlvbjwvdGV4dD4KICAgICAgICA8dGV4dCB4PSIyMTIuNSIgeT0iMjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM4NThhOTAiPlBFUlNPTjwvdGV4dD4KICAgICAgICAKICAgICAgICA8cmVjdCB4PSI0MTAiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIxNjUiIHJ4PSI4IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8cmVjdCB4PSI0MTAiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSI4MiIgcng9IjgiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8cmVjdCB4PSI0MTAiIHk9IjE5NSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIyMiIgZmlsbD0iI2Q5ZGVlMyIvPgogICAgICAgIDxjaXJjbGUgY3g9IjczMSIgY3k9IjE2MyIgcj0iMTQiIGZpbGw9IiNlZjJiMjUiIG9wYWNpdHk9Ii45Ii8+CiAgICAgICAgPHRleHQgeD0iNTg3LjUiIHk9IjI1NCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMzAzNDNhIj5TdGFydCBGWSBHb2FsIFNldHRpbmc8L3RleHQ+CiAgICAgICAgPHRleHQgeD0iNTg3LjUiIHk9IjI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjExIiBmaWxsPSIjODU4YTkwIj5HT0FMUzwvdGV4dD4KICAgICAgICAKICAgICAgICA8cmVjdCB4PSI3ODUiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIxNjUiIHJ4PSI4IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8cmVjdCB4PSI3ODUiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSI4MiIgcng9IjgiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8cmVjdCB4PSI3ODUiIHk9IjE5NSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIyMiIgZmlsbD0iI2Q5ZGVlMyIvPgogICAgICAgIDxjaXJjbGUgY3g9IjExMDYiIGN5PSIxNjMiIHI9IjE0IiBmaWxsPSIjZWYyYjI1IiBvcGFjaXR5PSIuOSIvPgogICAgICAgIDx0ZXh0IHg9Ijk2Mi41IiB5PSIyNTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzMwMzQzYSI+TWlkIFllYXIgUmV2aWV3PC90ZXh0PgogICAgICAgIDx0ZXh0IHg9Ijk2Mi41IiB5PSIyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzg1OGE5MCI+TUlEPC90ZXh0PgogICAgICAgIAogICAgICAgIDxyZWN0IHg9IjM1IiB5PSIzMjAiIHdpZHRoPSI1NDAiIGhlaWdodD0iMTY1IiByeD0iOCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZDlkY2RmIi8+CiAgICAgICAgPHJlY3QgeD0iMzUiIHk9IjMyMCIgd2lkdGg9IjU0MCIgaGVpZ2h0PSI4MiIgcng9IjgiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8cmVjdCB4PSIzNSIgeT0iMzgwIiB3aWR0aD0iNTQwIiBoZWlnaHQ9IjIyIiBmaWxsPSIjZDlkZWUzIi8+CiAgICAgICAgPGNpcmNsZSBjeD0iNTQxIiBjeT0iMzQ4IiByPSIxNCIgZmlsbD0iI2VmMmIyNSIgb3BhY2l0eT0iLjkiLz4KICAgICAgICA8dGV4dCB4PSIzMDUuMCIgeT0iNDM5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMzMDM0M2EiPkVuZCBZZWFyIFJldmlldzwvdGV4dD4KICAgICAgICA8dGV4dCB4PSIzMDUuMCIgeT0iNDY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM4NThhOTAiPkVORDwvdGV4dD4KICAgICAgICAKICAgICAgICA8cmVjdCB4PSI1OTUiIHk9IjMyMCIgd2lkdGg9IjU0NSIgaGVpZ2h0PSIxNjUiIHJ4PSI4IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8cmVjdCB4PSI1OTUiIHk9IjMyMCIgd2lkdGg9IjU0NSIgaGVpZ2h0PSI4MiIgcng9IjgiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8cmVjdCB4PSI1OTUiIHk9IjM4MCIgd2lkdGg9IjU0NSIgaGVpZ2h0PSIyMiIgZmlsbD0iI2Q5ZGVlMyIvPgogICAgICAgIDxjaXJjbGUgY3g9IjExMDYiIGN5PSIzNDgiIHI9IjE0IiBmaWxsPSIjZWYyYjI1IiBvcGFjaXR5PSIuOSIvPgogICAgICAgIDx0ZXh0IHg9Ijg2Ny41IiB5PSI0MzkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzMwMzQzYSI+TXkgQXBwcmFpc2FsczwvdGV4dD4KICAgICAgICA8dGV4dCB4PSI4NjcuNSIgeT0iNDY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM4NThhOTAiPkhJU1RPUlk8L3RleHQ+CiAgICAgICAgCiAgICA8L3N2Zz4=" alt="Employee dashboard illustrative application screen"><figcaption>Employee dashboard — illustrative screen based on the supplied application reference.</figcaption></figure>
+      <figure class="visual application-screen"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgdmlld0JveD0iMCAwIDEyMDAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgZmlsbD0iI2YzZjRmNSIvPgogICAgCiAgICA8cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSIxMTYwIiBoZWlnaHQ9Ijc4IiByeD0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2RmZTFlMyIvPgogICAgPHRleHQgeD0iNDgiIHk9IjcyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDIiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiNlZjJiMjUiPkdBUkRBPC90ZXh0PgogICAgPHRleHQgeD0iMjE4IiB5PSI3MiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjQyIiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjNWE1ZDYzIj5XT1JMRDwvdGV4dD4KICAgIDxjaXJjbGUgY3g9IjExMzUiIGN5PSI1OSIgcj0iMjUiIGZpbGw9IiNmN2VhZDAiLz4KICAgIDx0ZXh0IHg9IjExMzUiIHk9IjY3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM4YjZjMzUiPkpTPC90ZXh0PgogICAgCiAgICA8cmVjdCB4PSIzNSIgeT0iMTI1IiB3aWR0aD0iMTEzMCIgaGVpZ2h0PSIzOTAiIHJ4PSIxMCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZDlkY2RmIi8+CiAgICA8dGV4dCB4PSI2NSIgeT0iMTY1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjUiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMzMDM0M2EiPlN0YXJ0IEZZIEdvYWwgU2V0dGluZzwvdGV4dD4KICAgIDx0ZXh0IHg9IjY1IiB5PSIxOTIiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzdhN2Y4NSI+UGVyZm9ybWFuY2UgQXBwcmFpc2FsIFN5c3RlbTwvdGV4dD4KICAgIAogICAgICAgIDx0ZXh0IHg9IjY1IiB5PSIyMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzVkNjI2OCI+RW1wbG95ZWU8L3RleHQ+CiAgICAgICAgPHJlY3QgeD0iNjUiIHk9IjIzMiIgd2lkdGg9IjQ4NSIgaGVpZ2h0PSI0MiIgcng9IjYiIGZpbGw9IiNmYWZhZmEiIHN0cm9rZT0iI2Q5ZGNkZiIvPgogICAgICAgIDx0ZXh0IHg9Ijc5IiB5PSIyNTgiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzM0MzgzZCI+Sm9obiBTbWl0aDwvdGV4dD4KICAgICAgICAKICAgICAgICA8dGV4dCB4PSI2MTAiIHk9IjIyMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjNWQ2MjY4Ij5SZXZpZXcgUGVyaW9kPC90ZXh0PgogICAgICAgIDxyZWN0IHg9IjYxMCIgeT0iMjMyIiB3aWR0aD0iNDg1IiBoZWlnaHQ9IjQyIiByeD0iNiIgZmlsbD0iI2ZhZmFmYSIgc3Ryb2tlPSIjZDlkY2RmIi8+CiAgICAgICAgPHRleHQgeD0iNjI0IiB5PSIyNTgiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzM0MzgzZCI+RlkgMjAyNjwvdGV4dD4KICAgICAgICAKICAgICAgICA8dGV4dCB4PSI2NSIgeT0iMzAyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM1ZDYyNjgiPkdvYWwgLyBPYmplY3RpdmU8L3RleHQ+CiAgICAgICAgPHJlY3QgeD0iNjUiIHk9IjMxNCIgd2lkdGg9IjQ4NSIgaGVpZ2h0PSI0MiIgcng9IjYiIGZpbGw9IiNmYWZhZmEiIHN0cm9rZT0iI2Q5ZGNkZiIvPgogICAgICAgIDx0ZXh0IHg9Ijc5IiB5PSIzNDAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzM0MzgzZCI+SW1wcm92ZSBvcGVyYXRpb25hbCBlZmZpY2llbmN5PC90ZXh0PgogICAgICAgIAogICAgICAgIDx0ZXh0IHg9IjYxMCIgeT0iMzAyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM1ZDYyNjgiPlRhcmdldCAvIE1lYXN1cmU8L3RleHQ+CiAgICAgICAgPHJlY3QgeD0iNjEwIiB5PSIzMTQiIHdpZHRoPSI0ODUiIGhlaWdodD0iNDIiIHJ4PSI2IiBmaWxsPSIjZmFmYWZhIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8dGV4dCB4PSI2MjQiIHk9IjM0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEzIiBmaWxsPSIjMzQzODNkIj5SZWR1Y2UgcHJvY2Vzc2luZyB0aW1lIGJ5IDEwJTwvdGV4dD4KICAgICAgICAKICAgICAgICA8dGV4dCB4PSI2NSIgeT0iMzg0IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM1ZDYyNjgiPkR1ZSBEYXRlPC90ZXh0PgogICAgICAgIDxyZWN0IHg9IjY1IiB5PSIzOTYiIHdpZHRoPSI0ODUiIGhlaWdodD0iNDIiIHJ4PSI2IiBmaWxsPSIjZmFmYWZhIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8dGV4dCB4PSI3OSIgeT0iNDIyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiMzNDM4M2QiPjMxIE1hcmNoIDIwMjc8L3RleHQ+CiAgICAgICAgCiAgICAgICAgPHRleHQgeD0iNjEwIiB5PSIzODQiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzVkNjI2OCI+UHJpb3JpdHk8L3RleHQ+CiAgICAgICAgPHJlY3QgeD0iNjEwIiB5PSIzOTYiIHdpZHRoPSI0ODUiIGhlaWdodD0iNDIiIHJ4PSI2IiBmaWxsPSIjZmFmYWZhIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8dGV4dCB4PSI2MjQiIHk9IjQyMiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEzIiBmaWxsPSIjMzQzODNkIj5IaWdoPC90ZXh0PgogICAgICAgIAogICAgPHJlY3QgeD0iNjUiIHk9IjQ1MCIgd2lkdGg9IjEzMCIgaGVpZ2h0PSIzOCIgcng9IjYiIGZpbGw9IiNlZjJiMjUiLz4KICAgIDx0ZXh0IHg9IjEzMCIgeT0iNDc1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNmZmYiPlNhdmUgJmFtcDsgU3VibWl0PC90ZXh0PgogICAgPHJlY3QgeD0iMjEwIiB5PSI0NTAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMzgiIHJ4PSI2IiBmaWxsPSIjZjNmNGY1IiBzdHJva2U9IiNkOWRjZGYiLz4KICAgIDx0ZXh0IHg9IjI2MCIgeT0iNDc1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiM0ZDUyNTgiPlNhdmUgRHJhZnQ8L3RleHQ+CiAgICAKICAgIDwvc3ZnPg==" alt="Start FY Goal Setting illustrative application screen"><figcaption>Start FY Goal Setting — illustrative screen showing the goal submission experience.</figcaption></figure>
+      <figure class="visual application-screen"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgdmlld0JveD0iMCAwIDEyMDAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgZmlsbD0iI2YzZjRmNSIvPgogICAgCiAgICA8cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSIxMTYwIiBoZWlnaHQ9Ijc4IiByeD0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2RmZTFlMyIvPgogICAgPHRleHQgeD0iNDgiIHk9IjcyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDIiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiNlZjJiMjUiPkdBUkRBPC90ZXh0PgogICAgPHRleHQgeD0iMjE4IiB5PSI3MiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjQyIiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjNWE1ZDYzIj5XT1JMRDwvdGV4dD4KICAgIDxjaXJjbGUgY3g9IjExMzUiIGN5PSI1OSIgcj0iMjUiIGZpbGw9IiNmN2VhZDAiLz4KICAgIDx0ZXh0IHg9IjExMzUiIHk9IjY3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM4YjZjMzUiPkpTPC90ZXh0PgogICAgCiAgICA8cmVjdCB4PSIzNSIgeT0iMTI1IiB3aWR0aD0iMTEzMCIgaGVpZ2h0PSIzOTAiIHJ4PSIxMCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZDlkY2RmIi8+CiAgICA8dGV4dCB4PSI2NSIgeT0iMTY1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjUiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMzMDM0M2EiPk1pZCBZZWFyIFJldmlldzwvdGV4dD4KICAgIDx0ZXh0IHg9IjY1IiB5PSIxOTIiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzdhN2Y4NSI+UGVyZm9ybWFuY2UgQXBwcmFpc2FsIFN5c3RlbTwvdGV4dD4KICAgIAogICAgICAgIDx0ZXh0IHg9IjY1IiB5PSIyMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzVkNjI2OCI+RW1wbG95ZWU8L3RleHQ+CiAgICAgICAgPHJlY3QgeD0iNjUiIHk9IjIzMiIgd2lkdGg9IjQ4NSIgaGVpZ2h0PSI0MiIgcng9IjYiIGZpbGw9IiNmYWZhZmEiIHN0cm9rZT0iI2Q5ZGNkZiIvPgogICAgICAgIDx0ZXh0IHg9Ijc5IiB5PSIyNTgiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzM0MzgzZCI+Sm9obiBTbWl0aDwvdGV4dD4KICAgICAgICAKICAgICAgICA8dGV4dCB4PSI2MTAiIHk9IjIyMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjNWQ2MjY4Ij5SZXZpZXcgUGVyaW9kPC90ZXh0PgogICAgICAgIDxyZWN0IHg9IjYxMCIgeT0iMjMyIiB3aWR0aD0iNDg1IiBoZWlnaHQ9IjQyIiByeD0iNiIgZmlsbD0iI2ZhZmFmYSIgc3Ryb2tlPSIjZDlkY2RmIi8+CiAgICAgICAgPHRleHQgeD0iNjI0IiB5PSIyNTgiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzM0MzgzZCI+RlkgMjAyNjwvdGV4dD4KICAgICAgICAKICAgICAgICA8dGV4dCB4PSI2NSIgeT0iMzAyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM1ZDYyNjgiPlByb2dyZXNzIFN1bW1hcnk8L3RleHQ+CiAgICAgICAgPHJlY3QgeD0iNjUiIHk9IjMxNCIgd2lkdGg9IjQ4NSIgaGVpZ2h0PSI0MiIgcng9IjYiIGZpbGw9IiNmYWZhZmEiIHN0cm9rZT0iI2Q5ZGNkZiIvPgogICAgICAgIDx0ZXh0IHg9Ijc5IiB5PSIzNDAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzM0MzgzZCI+T2JqZWN0aXZlcyBhcmUgcHJvZ3Jlc3NpbmcgYXMgcGxhbm5lZDwvdGV4dD4KICAgICAgICAKICAgICAgICA8dGV4dCB4PSI2MTAiIHk9IjMwMiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjNWQ2MjY4Ij5BY2hpZXZlbWVudHM8L3RleHQ+CiAgICAgICAgPHJlY3QgeD0iNjEwIiB5PSIzMTQiIHdpZHRoPSI0ODUiIGhlaWdodD0iNDIiIHJ4PSI2IiBmaWxsPSIjZmFmYWZhIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8dGV4dCB4PSI2MjQiIHk9IjM0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEzIiBmaWxsPSIjMzQzODNkIj5EZWxpdmVyZWQga2V5IG1pbGVzdG9uZXM8L3RleHQ+CiAgICAgICAgCiAgICAgICAgPHRleHQgeD0iNjUiIHk9IjM4NCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjNWQ2MjY4Ij5DaGFsbGVuZ2VzPC90ZXh0PgogICAgICAgIDxyZWN0IHg9IjY1IiB5PSIzOTYiIHdpZHRoPSI0ODUiIGhlaWdodD0iNDIiIHJ4PSI2IiBmaWxsPSIjZmFmYWZhIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8dGV4dCB4PSI3OSIgeT0iNDIyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiMzNDM4M2QiPlJlc291cmNlIGNvbnN0cmFpbnRzPC90ZXh0PgogICAgICAgIAogICAgICAgIDx0ZXh0IHg9IjYxMCIgeT0iMzg0IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM1ZDYyNjgiPk92ZXJhbGwgUHJvZ3Jlc3M8L3RleHQ+CiAgICAgICAgPHJlY3QgeD0iNjEwIiB5PSIzOTYiIHdpZHRoPSI0ODUiIGhlaWdodD0iNDIiIHJ4PSI2IiBmaWxsPSIjZmFmYWZhIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8dGV4dCB4PSI2MjQiIHk9IjQyMiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEzIiBmaWxsPSIjMzQzODNkIj5PbiBUcmFjazwvdGV4dD4KICAgICAgICAKICAgIDxyZWN0IHg9IjY1IiB5PSI0NTAiIHdpZHRoPSIxMzAiIGhlaWdodD0iMzgiIHJ4PSI2IiBmaWxsPSIjZWYyYjI1Ii8+CiAgICA8dGV4dCB4PSIxMzAiIHk9IjQ3NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjZmZmIj5TYXZlICZhbXA7IFN1Ym1pdDwvdGV4dD4KICAgIDxyZWN0IHg9IjIxMCIgeT0iNDUwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjM4IiByeD0iNiIgZmlsbD0iI2YzZjRmNSIgc3Ryb2tlPSIjZDlkY2RmIi8+CiAgICA8dGV4dCB4PSIyNjAiIHk9IjQ3NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEzIiBmaWxsPSIjNGQ1MjU4Ij5TYXZlIERyYWZ0PC90ZXh0PgogICAgCiAgICA8L3N2Zz4=" alt="Mid Year Review illustrative application screen"><figcaption>Mid Year Review — illustrative screen showing progress and achievements.</figcaption></figure>
+      <figure class="visual application-screen"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgdmlld0JveD0iMCAwIDEyMDAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgZmlsbD0iI2YzZjRmNSIvPgogICAgCiAgICA8cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSIxMTYwIiBoZWlnaHQ9Ijc4IiByeD0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2RmZTFlMyIvPgogICAgPHRleHQgeD0iNDgiIHk9IjcyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDIiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiNlZjJiMjUiPkdBUkRBPC90ZXh0PgogICAgPHRleHQgeD0iMjE4IiB5PSI3MiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjQyIiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjNWE1ZDYzIj5XT1JMRDwvdGV4dD4KICAgIDxjaXJjbGUgY3g9IjExMzUiIGN5PSI1OSIgcj0iMjUiIGZpbGw9IiNmN2VhZDAiLz4KICAgIDx0ZXh0IHg9IjExMzUiIHk9IjY3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM4YjZjMzUiPkpTPC90ZXh0PgogICAgCiAgICA8cmVjdCB4PSIzNSIgeT0iMTI1IiB3aWR0aD0iMTEzMCIgaGVpZ2h0PSIzOTAiIHJ4PSIxMCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZDlkY2RmIi8+CiAgICA8dGV4dCB4PSI2NSIgeT0iMTY1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjUiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMzMDM0M2EiPkVuZCBZZWFyIFJldmlldzwvdGV4dD4KICAgIDx0ZXh0IHg9IjY1IiB5PSIxOTIiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzdhN2Y4NSI+UGVyZm9ybWFuY2UgQXBwcmFpc2FsIFN5c3RlbTwvdGV4dD4KICAgIAogICAgICAgIDx0ZXh0IHg9IjY1IiB5PSIyMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzVkNjI2OCI+RW1wbG95ZWU8L3RleHQ+CiAgICAgICAgPHJlY3QgeD0iNjUiIHk9IjIzMiIgd2lkdGg9IjQ4NSIgaGVpZ2h0PSI0MiIgcng9IjYiIGZpbGw9IiNmYWZhZmEiIHN0cm9rZT0iI2Q5ZGNkZiIvPgogICAgICAgIDx0ZXh0IHg9Ijc5IiB5PSIyNTgiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzM0MzgzZCI+Sm9obiBTbWl0aDwvdGV4dD4KICAgICAgICAKICAgICAgICA8dGV4dCB4PSI2MTAiIHk9IjIyMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjNWQ2MjY4Ij5SZXZpZXcgUGVyaW9kPC90ZXh0PgogICAgICAgIDxyZWN0IHg9IjYxMCIgeT0iMjMyIiB3aWR0aD0iNDg1IiBoZWlnaHQ9IjQyIiByeD0iNiIgZmlsbD0iI2ZhZmFmYSIgc3Ryb2tlPSIjZDlkY2RmIi8+CiAgICAgICAgPHRleHQgeD0iNjI0IiB5PSIyNTgiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzM0MzgzZCI+RlkgMjAyNjwvdGV4dD4KICAgICAgICAKICAgICAgICA8dGV4dCB4PSI2NSIgeT0iMzAyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM1ZDYyNjgiPkZpbmFsIFNlbGYtQXNzZXNzbWVudDwvdGV4dD4KICAgICAgICA8cmVjdCB4PSI2NSIgeT0iMzE0IiB3aWR0aD0iNDg1IiBoZWlnaHQ9IjQyIiByeD0iNiIgZmlsbD0iI2ZhZmFmYSIgc3Ryb2tlPSIjZDlkY2RmIi8+CiAgICAgICAgPHRleHQgeD0iNzkiIHk9IjM0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEzIiBmaWxsPSIjMzQzODNkIj5Bbm51YWwgb2JqZWN0aXZlcyBjb21wbGV0ZWQ8L3RleHQ+CiAgICAgICAgCiAgICAgICAgPHRleHQgeD0iNjEwIiB5PSIzMDIiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzVkNjI2OCI+S2V5IE91dGNvbWVzPC90ZXh0PgogICAgICAgIDxyZWN0IHg9IjYxMCIgeT0iMzE0IiB3aWR0aD0iNDg1IiBoZWlnaHQ9IjQyIiByeD0iNiIgZmlsbD0iI2ZhZmFmYSIgc3Ryb2tlPSIjZDlkY2RmIi8+CiAgICAgICAgPHRleHQgeD0iNjI0IiB5PSIzNDAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzM0MzgzZCI+VGFyZ2V0cyBhY2hpZXZlZCBhY3Jvc3MgY29yZSBwcmlvcml0aWVzPC90ZXh0PgogICAgICAgIAogICAgICAgIDx0ZXh0IHg9IjY1IiB5PSIzODQiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzVkNjI2OCI+RGV2ZWxvcG1lbnQgRm9jdXM8L3RleHQ+CiAgICAgICAgPHJlY3QgeD0iNjUiIHk9IjM5NiIgd2lkdGg9IjQ4NSIgaGVpZ2h0PSI0MiIgcng9IjYiIGZpbGw9IiNmYWZhZmEiIHN0cm9rZT0iI2Q5ZGNkZiIvPgogICAgICAgIDx0ZXh0IHg9Ijc5IiB5PSI0MjIiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzM0MzgzZCI+TGVhZGVyc2hpcCBhbmQgcHJvY2VzcyBpbXByb3ZlbWVudDwvdGV4dD4KICAgICAgICAKICAgICAgICA8dGV4dCB4PSI2MTAiIHk9IjM4NCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjExIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjNWQ2MjY4Ij5PdmVyYWxsIFJhdGluZzwvdGV4dD4KICAgICAgICA8cmVjdCB4PSI2MTAiIHk9IjM5NiIgd2lkdGg9IjQ4NSIgaGVpZ2h0PSI0MiIgcng9IjYiIGZpbGw9IiNmYWZhZmEiIHN0cm9rZT0iI2Q5ZGNkZiIvPgogICAgICAgIDx0ZXh0IHg9IjYyNCIgeT0iNDIyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiMzNDM4M2QiPk1lZXRzIEV4cGVjdGF0aW9uczwvdGV4dD4KICAgICAgICAKICAgIDxyZWN0IHg9IjY1IiB5PSI0NTAiIHdpZHRoPSIxMzAiIGhlaWdodD0iMzgiIHJ4PSI2IiBmaWxsPSIjZWYyYjI1Ii8+CiAgICA8dGV4dCB4PSIxMzAiIHk9IjQ3NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjZmZmIj5TYXZlICZhbXA7IFN1Ym1pdDwvdGV4dD4KICAgIDxyZWN0IHg9IjIxMCIgeT0iNDUwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjM4IiByeD0iNiIgZmlsbD0iI2YzZjRmNSIgc3Ryb2tlPSIjZDlkY2RmIi8+CiAgICA8dGV4dCB4PSIyNjAiIHk9IjQ3NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEzIiBmaWxsPSIjNGQ1MjU4Ij5TYXZlIERyYWZ0PC90ZXh0PgogICAgCiAgICA8L3N2Zz4=" alt="End Year Review illustrative application screen"><figcaption>End Year Review — illustrative screen showing the final self-assessment.</figcaption></figure>
+      <figure class="visual application-screen"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgdmlld0JveD0iMCAwIDEyMDAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgZmlsbD0iI2YzZjRmNSIvPgogICAgCiAgICA8cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSIxMTYwIiBoZWlnaHQ9Ijc4IiByeD0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2RmZTFlMyIvPgogICAgPHRleHQgeD0iNDgiIHk9IjcyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDIiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiNlZjJiMjUiPkdBUkRBPC90ZXh0PgogICAgPHRleHQgeD0iMjE4IiB5PSI3MiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjQyIiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjNWE1ZDYzIj5XT1JMRDwvdGV4dD4KICAgIDxjaXJjbGUgY3g9IjExMzUiIGN5PSI1OSIgcj0iMjUiIGZpbGw9IiNmN2VhZDAiLz4KICAgIDx0ZXh0IHg9IjExMzUiIHk9IjY3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM4YjZjMzUiPkpTPC90ZXh0PgogICAgCiAgICA8cmVjdCB4PSIzNSIgeT0iMTMwIiB3aWR0aD0iMTEzMCIgaGVpZ2h0PSIzNTUiIHJ4PSIxMCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZDlkY2RmIi8+CiAgICA8dGV4dCB4PSI2NSIgeT0iMTcwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMzMDM0M2EiPk15IEFwcHJhaXNhbHM8L3RleHQ+CiAgICA8dGV4dCB4PSI2NSIgeT0iMTk2IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM3YTdmODUiPkN1cnJlbnQgYW5kIGhpc3RvcmljYWwgYXBwcmFpc2FsIHJlY29yZHM8L3RleHQ+CiAgICA8cmVjdCB4PSI2NSIgeT0iMjIwIiB3aWR0aD0iMTA3MCIgaGVpZ2h0PSI0OCIgcng9IjUiIGZpbGw9IiNmNWY2ZjciLz4KICAgIDx0ZXh0IHg9Ijg1IiB5PSIyNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzU1NSI+QVBQUkFJU0FMIFNUQUdFPC90ZXh0PgogICAgPHRleHQgeD0iNDEwIiB5PSIyNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzU1NSI+U1RBVFVTPC90ZXh0PgogICAgPHRleHQgeD0iNjUwIiB5PSIyNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzU1NSI+TEFTVCBVUERBVEVEPC90ZXh0PgogICAgPHRleHQgeD0iOTAwIiB5PSIyNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzU1NSI+QUNUSU9OPC90ZXh0PgogICAgCiAgICAgICAgPGxpbmUgeDE9IjY1IiB5MT0iMzI4IiB4Mj0iMTEzNSIgeTI9IjMyOCIgc3Ryb2tlPSIjZTRlNWU3Ii8+CiAgICAgICAgPHRleHQgeD0iODUiIHk9IjMwNyIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjMzMzIj5TdGFydCBGWSBHb2FsIFNldHRpbmc8L3RleHQ+CiAgICAgICAgPHJlY3QgeD0iNDEwIiB5PSIyODgiIHdpZHRoPSI5MCIgaGVpZ2h0PSIyNSIgcng9IjEyIiBmaWxsPSIjZjZlMmU0Ii8+CiAgICAgICAgPHRleHQgeD0iNDU1IiB5PSIzMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2VmMmIyNSI+QXBwcm92ZWQ8L3RleHQ+CiAgICAgICAgPHRleHQgeD0iNjUwIiB5PSIzMDciIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzU1NSI+MTIgQXByIDIwMjY8L3RleHQ+CiAgICAgICAgPHRleHQgeD0iOTAwIiB5PSIzMDciIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2VmMmIyNSI+VmlldzwvdGV4dD4KICAgICAgICAKICAgICAgICA8bGluZSB4MT0iNjUiIHkxPSIzOTAiIHgyPSIxMTM1IiB5Mj0iMzkwIiBzdHJva2U9IiNlNGU1ZTciLz4KICAgICAgICA8dGV4dCB4PSI4NSIgeT0iMzY5IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiMzMzMiPk1pZCBZZWFyIFJldmlldzwvdGV4dD4KICAgICAgICA8cmVjdCB4PSI0MTAiIHk9IjM1MCIgd2lkdGg9IjkwIiBoZWlnaHQ9IjI1IiByeD0iMTIiIGZpbGw9IiNmNmUyZTQiLz4KICAgICAgICA8dGV4dCB4PSI0NTUiIHk9IjM2NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjZWYyYjI1Ij5QZW5kaW5nPC90ZXh0PgogICAgICAgIDx0ZXh0IHg9IjY1MCIgeT0iMzY5IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM1NTUiPuKAlDwvdGV4dD4KICAgICAgICA8dGV4dCB4PSI5MDAiIHk9IjM2OSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjZWYyYjI1Ij5Db250aW51ZTwvdGV4dD4KICAgICAgICAKICAgICAgICA8bGluZSB4MT0iNjUiIHkxPSI0NTIiIHgyPSIxMTM1IiB5Mj0iNDUyIiBzdHJva2U9IiNlNGU1ZTciLz4KICAgICAgICA8dGV4dCB4PSI4NSIgeT0iNDMxIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiMzMzMiPkVuZCBZZWFyIFJldmlldzwvdGV4dD4KICAgICAgICA8cmVjdCB4PSI0MTAiIHk9IjQxMiIgd2lkdGg9IjkwIiBoZWlnaHQ9IjI1IiByeD0iMTIiIGZpbGw9IiNmNmUyZTQiLz4KICAgICAgICA8dGV4dCB4PSI0NTUiIHk9IjQyOSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjZWYyYjI1Ij5Ob3QgU3RhcnRlZDwvdGV4dD4KICAgICAgICA8dGV4dCB4PSI2NTAiIHk9IjQzMSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjNTU1Ij7igJQ8L3RleHQ+CiAgICAgICAgPHRleHQgeD0iOTAwIiB5PSI0MzEiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2VmMmIyNSI+T3BlbjwvdGV4dD4KICAgICAgICAKICAgIDwvc3ZnPg==" alt="My Appraisals illustrative application screen"><figcaption>My Appraisals — illustrative screen showing current and historical appraisal status.</figcaption></figure>
+      </div>
+      <figure class="visual"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgdmlld0JveD0iMCAwIDEyMDAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgZmlsbD0iI2YzZjRmNSIvPgogICAgCiAgICA8cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSIxMTYwIiBoZWlnaHQ9Ijc4IiByeD0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2RmZTFlMyIvPgogICAgPHRleHQgeD0iNDgiIHk9IjcyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDIiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiNlZjJiMjUiPkdBUkRBPC90ZXh0PgogICAgPHRleHQgeD0iMjE4IiB5PSI3MiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjQyIiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjNWE1ZDYzIj5XT1JMRDwvdGV4dD4KICAgIDxjaXJjbGUgY3g9IjExMzUiIGN5PSI1OSIgcj0iMjUiIGZpbGw9IiNmN2VhZDAiLz4KICAgIDx0ZXh0IHg9IjExMzUiIHk9IjY3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM4YjZjMzUiPkpTPC90ZXh0PgogICAgCiAgICAgICAgPHJlY3QgeD0iMzUiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIxNjUiIHJ4PSI4IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8cmVjdCB4PSIzNSIgeT0iMTM1IiB3aWR0aD0iMzU1IiBoZWlnaHQ9IjgyIiByeD0iOCIgZmlsbD0iI2Q5ZGVlMyIvPgogICAgICAgIDxyZWN0IHg9IjM1IiB5PSIxOTUiIHdpZHRoPSIzNTUiIGhlaWdodD0iMjIiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8Y2lyY2xlIGN4PSIzNTYiIGN5PSIxNjMiIHI9IjE0IiBmaWxsPSIjZWYyYjI1IiBvcGFjaXR5PSIuOSIvPgogICAgICAgIDx0ZXh0IHg9IjIxMi41IiB5PSIyNTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzMwMzQzYSI+RW1wbG95ZWUgSW5mb3JtYXRpb24gU2VjdGlvbjwvdGV4dD4KICAgICAgICA8dGV4dCB4PSIyMTIuNSIgeT0iMjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM4NThhOTAiPlBFUlNPTjwvdGV4dD4KICAgICAgICAKICAgICAgICA8cmVjdCB4PSI0MTAiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIxNjUiIHJ4PSI4IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8cmVjdCB4PSI0MTAiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSI4MiIgcng9IjgiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8cmVjdCB4PSI0MTAiIHk9IjE5NSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIyMiIgZmlsbD0iI2Q5ZGVlMyIvPgogICAgICAgIDxjaXJjbGUgY3g9IjczMSIgY3k9IjE2MyIgcj0iMTQiIGZpbGw9IiNlZjJiMjUiIG9wYWNpdHk9Ii45Ii8+CiAgICAgICAgPHRleHQgeD0iNTg3LjUiIHk9IjI1NCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMzAzNDNhIj5TdGFydCBGWSBHb2FsIFNldHRpbmc8L3RleHQ+CiAgICAgICAgPHRleHQgeD0iNTg3LjUiIHk9IjI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjExIiBmaWxsPSIjODU4YTkwIj5HT0FMUzwvdGV4dD4KICAgICAgICAKICAgICAgICA8cmVjdCB4PSI3ODUiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIxNjUiIHJ4PSI4IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8cmVjdCB4PSI3ODUiIHk9IjEzNSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSI4MiIgcng9IjgiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8cmVjdCB4PSI3ODUiIHk9IjE5NSIgd2lkdGg9IjM1NSIgaGVpZ2h0PSIyMiIgZmlsbD0iI2Q5ZGVlMyIvPgogICAgICAgIDxjaXJjbGUgY3g9IjExMDYiIGN5PSIxNjMiIHI9IjE0IiBmaWxsPSIjZWYyYjI1IiBvcGFjaXR5PSIuOSIvPgogICAgICAgIDx0ZXh0IHg9Ijk2Mi41IiB5PSIyNTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzMwMzQzYSI+TWlkIFllYXIgUmV2aWV3PC90ZXh0PgogICAgICAgIDx0ZXh0IHg9Ijk2Mi41IiB5PSIyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZmlsbD0iIzg1OGE5MCI+TUlEPC90ZXh0PgogICAgICAgIAogICAgICAgIDxyZWN0IHg9IjM1IiB5PSIzMjAiIHdpZHRoPSI1NDAiIGhlaWdodD0iMTY1IiByeD0iOCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZDlkY2RmIi8+CiAgICAgICAgPHJlY3QgeD0iMzUiIHk9IjMyMCIgd2lkdGg9IjU0MCIgaGVpZ2h0PSI4MiIgcng9IjgiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8cmVjdCB4PSIzNSIgeT0iMzgwIiB3aWR0aD0iNTQwIiBoZWlnaHQ9IjIyIiBmaWxsPSIjZDlkZWUzIi8+CiAgICAgICAgPGNpcmNsZSBjeD0iNTQxIiBjeT0iMzQ4IiByPSIxNCIgZmlsbD0iI2VmMmIyNSIgb3BhY2l0eT0iLjkiLz4KICAgICAgICA8dGV4dCB4PSIzMDUuMCIgeT0iNDM5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMzMDM0M2EiPkVuZCBZZWFyIFJldmlldzwvdGV4dD4KICAgICAgICA8dGV4dCB4PSIzMDUuMCIgeT0iNDY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM4NThhOTAiPkVORDwvdGV4dD4KICAgICAgICAKICAgICAgICA8cmVjdCB4PSI1OTUiIHk9IjMyMCIgd2lkdGg9IjU0NSIgaGVpZ2h0PSIxNjUiIHJ4PSI4IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgICAgICA8cmVjdCB4PSI1OTUiIHk9IjMyMCIgd2lkdGg9IjU0NSIgaGVpZ2h0PSI4MiIgcng9IjgiIGZpbGw9IiNkOWRlZTMiLz4KICAgICAgICA8cmVjdCB4PSI1OTUiIHk9IjM4MCIgd2lkdGg9IjU0NSIgaGVpZ2h0PSIyMiIgZmlsbD0iI2Q5ZGVlMyIvPgogICAgICAgIDxjaXJjbGUgY3g9IjExMDYiIGN5PSIzNDgiIHI9IjE0IiBmaWxsPSIjZWYyYjI1IiBvcGFjaXR5PSIuOSIvPgogICAgICAgIDx0ZXh0IHg9Ijg2Ny41IiB5PSI0MzkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzMwMzQzYSI+TXkgQXBwcmFpc2FsczwvdGV4dD4KICAgICAgICA8dGV4dCB4PSI4NjcuNSIgeT0iNDY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM4NThhOTAiPkhJU1RPUlk8L3RleHQ+CiAgICAgICAgCiAgICA8L3N2Zz4=" alt="Employee dashboard — illustrative application screen"><figcaption>Employee dashboard — illustrative application screen</figcaption></figure>
+      <div class="grid">
+        <div class="card">
+          <div class="k">1</div>
+          <h4>Employee Information</h4>
+          <p>View and verify personal and role-related details, reporting lines, and department — before starting any appraisal process.</p>
+        </div>
+        <div class="card">
+          <div class="k">2</div>
+          <h4>Start FY Goal Setting</h4>
+          <p>Define performance goals, align them with team and organizational priorities, and submit for managerial approval. The manager is notified automatically.</p>
+        </div>
+        <div class="card">
+          <div class="k">3</div>
+          <h4>Mid Year Review</h4>
+          <p>Reflect on progress, update achievements and challenges, and submit a self-review. The manager may approve or request revisions.</p>
+        </div>
+        <div class="card">
+          <div class="k">4</div>
+          <h4>End Year Review</h4>
+          <p>Provide a final self-assessment and summarize outcomes — feeding into performance ratings and compensation discussions.</p>
+        </div>
+        <div class="card">
+          <div class="k">5</div>
+          <h4>My Appraisals</h4>
+          <p>View all current and historical appraisals, track status, and access feedback left by managers.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="manager">
+      <div class="section-head">
+        <div class="section-num">04 — Manager Application</div>
+        <h2>Queues for every stage</h2>
+        <p class="intro">The manager dashboard groups appraisals by stage, so nothing pending gets missed.</p>
+      </div>
+      <figure class="visual"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgdmlld0JveD0iMCAwIDEyMDAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgZmlsbD0iI2YzZjRmNSIvPgogICAgCiAgICA8cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSIxMTYwIiBoZWlnaHQ9Ijc4IiByeD0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2RmZTFlMyIvPgogICAgPHRleHQgeD0iNDgiIHk9IjcyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDIiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiNlZjJiMjUiPkdBUkRBPC90ZXh0PgogICAgPHRleHQgeD0iMjE4IiB5PSI3MiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjQyIiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjNWE1ZDYzIj5XT1JMRDwvdGV4dD4KICAgIDxjaXJjbGUgY3g9IjExMzUiIGN5PSI1OSIgcj0iMjUiIGZpbGw9IiNmN2VhZDAiLz4KICAgIDx0ZXh0IHg9IjExMzUiIHk9IjY3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM4YjZjMzUiPkpTPC90ZXh0PgogICAgCiAgICA8dGV4dCB4PSI0MCIgeT0iMTQwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjUiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMzMDM0M2EiPk1hbmFnZXIgQXBwbGljYXRpb248L3RleHQ+CiAgICA8dGV4dCB4PSI0MCIgeT0iMTY1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM3YTdmODUiPlBlbmRpbmcgcmV2aWV3cyByZXF1aXJpbmcgYWN0aW9uPC90ZXh0PgogICAgPHJlY3QgeD0iMzUiIHk9IjE5MCIgd2lkdGg9IjMzMCIgaGVpZ2h0PSIzMDAiIHJ4PSI4IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNkOWRjZGYiLz4KICAgIDx0ZXh0IHg9IjYwIiB5PSIyMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMyIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzMwMzQzYSI+RW1wbG95ZWVzPC90ZXh0PgogICAgCiAgICAgICAgPHJlY3QgeD0iNTIiIHk9IjI1MCIgd2lkdGg9IjI5NSIgaGVpZ2h0PSIzNCIgcng9IjUiIGZpbGw9IiNmNmUyZTQiLz4KICAgICAgICA8Y2lyY2xlIGN4PSI3MiIgY3k9IjI2NyIgcj0iOSIgZmlsbD0iI2VmMmIyNSIvPgogICAgICAgIDx0ZXh0IHg9IjkyIiB5PSIyNzIiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzMzMyI+RW1wbG95ZWUgQTwvdGV4dD4KICAgICAgICAKICAgICAgICA8cmVjdCB4PSI1MiIgeT0iMjkzIiB3aWR0aD0iMjk1IiBoZWlnaHQ9IjM0IiByeD0iNSIgZmlsbD0iI2ZmZiIvPgogICAgICAgIDxjaXJjbGUgY3g9IjcyIiBjeT0iMzEwIiByPSI5IiBmaWxsPSIjZWYyYjI1Ii8+CiAgICAgICAgPHRleHQgeD0iOTIiIHk9IjMxNSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjMzMzIj5FbXBsb3llZSBCPC90ZXh0PgogICAgICAgIAogICAgICAgIDxyZWN0IHg9IjUyIiB5PSIzMzYiIHdpZHRoPSIyOTUiIGhlaWdodD0iMzQiIHJ4PSI1IiBmaWxsPSIjZmZmIi8+CiAgICAgICAgPGNpcmNsZSBjeD0iNzIiIGN5PSIzNTMiIHI9IjkiIGZpbGw9IiNlZjJiMjUiLz4KICAgICAgICA8dGV4dCB4PSI5MiIgeT0iMzU4IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiMzMzMiPkVtcGxveWVlIEM8L3RleHQ+CiAgICAgICAgCiAgICAgICAgPHJlY3QgeD0iNTIiIHk9IjM3OSIgd2lkdGg9IjI5NSIgaGVpZ2h0PSIzNCIgcng9IjUiIGZpbGw9IiNmZmYiLz4KICAgICAgICA8Y2lyY2xlIGN4PSI3MiIgY3k9IjM5NiIgcj0iOSIgZmlsbD0iI2VmMmIyNSIvPgogICAgICAgIDx0ZXh0IHg9IjkyIiB5PSI0MDEiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzMzMyI+RW1wbG95ZWUgRDwvdGV4dD4KICAgICAgICAKICAgICAgICA8cmVjdCB4PSI1MiIgeT0iNDIyIiB3aWR0aD0iMjk1IiBoZWlnaHQ9IjM0IiByeD0iNSIgZmlsbD0iI2ZmZiIvPgogICAgICAgIDxjaXJjbGUgY3g9IjcyIiBjeT0iNDM5IiByPSI5IiBmaWxsPSIjZWYyYjI1Ii8+CiAgICAgICAgPHRleHQgeD0iOTIiIHk9IjQ0NCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjMzMzIj5FbXBsb3llZSBFPC90ZXh0PgogICAgICAgIAogICAgPHJlY3QgeD0iMzkwIiB5PSIxOTAiIHdpZHRoPSI3NzUiIGhlaWdodD0iMzAwIiByeD0iOCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZDlkY2RmIi8+CiAgICA8dGV4dCB4PSI0MjAiIHk9IjIyNSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjMzAzNDNhIj5SZXZpZXcgR29hbDwvdGV4dD4KICAgIDxyZWN0IHg9IjQyMCIgeT0iMjQ1IiB3aWR0aD0iNzE1IiBoZWlnaHQ9IjU1IiByeD0iNiIgZmlsbD0iI2ZhZmFmYSIgc3Ryb2tlPSIjZTBlMmU0Ii8+CiAgICA8dGV4dCB4PSI0NDAiIHk9IjI3OCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEzIiBmaWxsPSIjNGQ1MjU4Ij5JbXByb3ZlIHNlcnZpY2UgZGVsaXZlcnkgYW5kIGFjaGlldmUgYWdyZWVkIGFubnVhbCBvYmplY3RpdmVzLjwvdGV4dD4KICAgIDx0ZXh0IHg9IjQyMCIgeT0iMzM1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTEiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM1ZDYyNjgiPk1hbmFnZXIgY29tbWVudHM8L3RleHQ+CiAgICA8cmVjdCB4PSI0MjAiIHk9IjM0NyIgd2lkdGg9IjcxNSIgaGVpZ2h0PSI1OCIgcng9IjYiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2Q5ZGNkZiIvPgogICAgPHJlY3QgeD0iNDIwIiB5PSI0MjUiIHdpZHRoPSIxMDUiIGhlaWdodD0iMzgiIHJ4PSI2IiBmaWxsPSIjZWYyYjI1Ii8+CiAgICA8dGV4dCB4PSI0NzIiIHk9IjQ1MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjZmZmIj5BcHByb3ZlPC90ZXh0PgogICAgPHJlY3QgeD0iNTM4IiB5PSI0MjUiIHdpZHRoPSIxMDUiIGhlaWdodD0iMzgiIHJ4PSI2IiBmaWxsPSIjZmZmIiBzdHJva2U9IiNlZjJiMjUiLz4KICAgIDx0ZXh0IHg9IjU5MCIgeT0iNDUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNlZjJiMjUiPlJlamVjdDwvdGV4dD4KICAgIAogICAgPC9zdmc+" alt="Manager review queue — illustrative application screen"><figcaption>Manager review queue — illustrative application screen</figcaption></figure>
+      <div class="grid two">
+        <div class="card">
+          <h4>Pending Start FY Reviews</h4>
+          <p>Goals awaiting approval, including any that were previously rejected. Click an employee in the left gallery, then <em>Review Goal</em> to approve or reject with comments.</p>
+        </div>
+        <div class="card">
+          <h4>Pending Mid Year Reviews</h4>
+          <p>Progress reviews awaiting feedback or approval. Click the employee, then <em>Review Goal</em> to approve or reject the mid-year update.</p>
+        </div>
+        <div class="card">
+          <h4>Pending End Year Reviews</h4>
+          <p>Final reviews awaiting closure — add comments and save.</p>
+        </div>
+        <div class="card">
+          <h4>All Reviews</h4>
+          <p>A complete, auditable list of every review under the manager's scope, with a print button to print all reviews at once.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="workflow">
+      <div class="section-head">
+        <div class="section-num">05 — Appraisal Workflow</div>
+        <h2>How a cycle moves end to end</h2>
+      </div>
+      <figure class="visual"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgdmlld0JveD0iMCAwIDEyMDAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgZmlsbD0iI2YzZjRmNSIvPgogICAgCiAgICA8cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSIxMTYwIiBoZWlnaHQ9Ijc4IiByeD0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2RmZTFlMyIvPgogICAgPHRleHQgeD0iNDgiIHk9IjcyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDIiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiNlZjJiMjUiPkdBUkRBPC90ZXh0PgogICAgPHRleHQgeD0iMjE4IiB5PSI3MiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjQyIiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjNWE1ZDYzIj5XT1JMRDwvdGV4dD4KICAgIDxjaXJjbGUgY3g9IjExMzUiIGN5PSI1OSIgcj0iMjUiIGZpbGw9IiNmN2VhZDAiLz4KICAgIDx0ZXh0IHg9IjExMzUiIHk9IjY3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM4YjZjMzUiPkpTPC90ZXh0PgogICAgCiAgICA8cmVjdCB4PSIzNSIgeT0iMTMwIiB3aWR0aD0iMTEzMCIgaGVpZ2h0PSIzNTUiIHJ4PSIxMCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZDlkY2RmIi8+CiAgICA8dGV4dCB4PSI2NSIgeT0iMTcwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMzMDM0M2EiPk15IEFwcHJhaXNhbHM8L3RleHQ+CiAgICA8dGV4dCB4PSI2NSIgeT0iMTk2IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM3YTdmODUiPkN1cnJlbnQgYW5kIGhpc3RvcmljYWwgYXBwcmFpc2FsIHJlY29yZHM8L3RleHQ+CiAgICA8cmVjdCB4PSI2NSIgeT0iMjIwIiB3aWR0aD0iMTA3MCIgaGVpZ2h0PSI0OCIgcng9IjUiIGZpbGw9IiNmNWY2ZjciLz4KICAgIDx0ZXh0IHg9Ijg1IiB5PSIyNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzU1NSI+QVBQUkFJU0FMIFNUQUdFPC90ZXh0PgogICAgPHRleHQgeD0iNDEwIiB5PSIyNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzU1NSI+U1RBVFVTPC90ZXh0PgogICAgPHRleHQgeD0iNjUwIiB5PSIyNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzU1NSI+TEFTVCBVUERBVEVEPC90ZXh0PgogICAgPHRleHQgeD0iOTAwIiB5PSIyNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzU1NSI+QUNUSU9OPC90ZXh0PgogICAgCiAgICAgICAgPGxpbmUgeDE9IjY1IiB5MT0iMzI4IiB4Mj0iMTEzNSIgeTI9IjMyOCIgc3Ryb2tlPSIjZTRlNWU3Ii8+CiAgICAgICAgPHRleHQgeD0iODUiIHk9IjMwNyIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjMzMzIj5TdGFydCBGWSBHb2FsIFNldHRpbmc8L3RleHQ+CiAgICAgICAgPHJlY3QgeD0iNDEwIiB5PSIyODgiIHdpZHRoPSI5MCIgaGVpZ2h0PSIyNSIgcng9IjEyIiBmaWxsPSIjZjZlMmU0Ii8+CiAgICAgICAgPHRleHQgeD0iNDU1IiB5PSIzMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2VmMmIyNSI+QXBwcm92ZWQ8L3RleHQ+CiAgICAgICAgPHRleHQgeD0iNjUwIiB5PSIzMDciIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzU1NSI+MTIgQXByIDIwMjY8L3RleHQ+CiAgICAgICAgPHRleHQgeD0iOTAwIiB5PSIzMDciIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2VmMmIyNSI+VmlldzwvdGV4dD4KICAgICAgICAKICAgICAgICA8bGluZSB4MT0iNjUiIHkxPSIzOTAiIHgyPSIxMTM1IiB5Mj0iMzkwIiBzdHJva2U9IiNlNGU1ZTciLz4KICAgICAgICA8dGV4dCB4PSI4NSIgeT0iMzY5IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiMzMzMiPk1pZCBZZWFyIFJldmlldzwvdGV4dD4KICAgICAgICA8cmVjdCB4PSI0MTAiIHk9IjM1MCIgd2lkdGg9IjkwIiBoZWlnaHQ9IjI1IiByeD0iMTIiIGZpbGw9IiNmNmUyZTQiLz4KICAgICAgICA8dGV4dCB4PSI0NTUiIHk9IjM2NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjZWYyYjI1Ij5QZW5kaW5nPC90ZXh0PgogICAgICAgIDx0ZXh0IHg9IjY1MCIgeT0iMzY5IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM1NTUiPuKAlDwvdGV4dD4KICAgICAgICA8dGV4dCB4PSI5MDAiIHk9IjM2OSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjZWYyYjI1Ij5Db250aW51ZTwvdGV4dD4KICAgICAgICAKICAgICAgICA8bGluZSB4MT0iNjUiIHkxPSI0NTIiIHgyPSIxMTM1IiB5Mj0iNDUyIiBzdHJva2U9IiNlNGU1ZTciLz4KICAgICAgICA8dGV4dCB4PSI4NSIgeT0iNDMxIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiMzMzMiPkVuZCBZZWFyIFJldmlldzwvdGV4dD4KICAgICAgICA8cmVjdCB4PSI0MTAiIHk9IjQxMiIgd2lkdGg9IjkwIiBoZWlnaHQ9IjI1IiByeD0iMTIiIGZpbGw9IiNmNmUyZTQiLz4KICAgICAgICA8dGV4dCB4PSI0NTUiIHk9IjQyOSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjZWYyYjI1Ij5Ob3QgU3RhcnRlZDwvdGV4dD4KICAgICAgICA8dGV4dCB4PSI2NTAiIHk9IjQzMSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjNTU1Ij7igJQ8L3RleHQ+CiAgICAgICAgPHRleHQgeD0iOTAwIiB5PSI0MzEiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2VmMmIyNSI+T3BlbjwvdGV4dD4KICAgICAgICAKICAgIDwvc3ZnPg==" alt="Workflow context — illustrative application screens"><figcaption>Workflow context — illustrative application screens</figcaption></figure>
+      <div class="stepper">
+        <div class="step"><div class="dot">1</div><p>System triggers initiate the appraisal cycle</p></div>
+        <div class="step"><div class="dot">2</div><p>Employee is notified to complete their appraisal</p></div>
+        <div class="step"><div class="dot">3</div><p>Employee completes and submits</p></div>
+        <div class="step"><div class="dot">4</div><p>Manager is notified to review</p></div>
+        <div class="step"><div class="dot">5</div><p>Manager approves or rejects with comments</p></div>
+        <div class="step"><div class="dot">6</div><p>Employee is notified of the outcome</p></div>
+        <div class="step"><div class="dot">7</div><p>If rejected, employee revises and resubmits</p></div>
+      </div>
+
+      <h3 style="margin-top:40px; margin-bottom:14px;">Status definitions</h3>
+      <div class="status-row">
+        <div class="status approved">
+          <span class="tag">Approved</span>
+          <p>The appraisal has been accepted and finalized.</p>
+        </div>
+        <div class="status rejected">
+          <span class="tag">Rejected</span>
+          <p>The appraisal requires revision by the employee.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="notifications">
+      <div class="section-head">
+        <div class="section-num">06 — Notifications</div>
+        <h2>Automatic, at every handoff</h2>
+        <p class="intro">Sent via the configured corporate communication channels — for example email or system alerts.</p>
+      </div>
+      <figure class="visual"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgdmlld0JveD0iMCAwIDEyMDAgNTYwIj4KICAgIDxyZWN0IHdpZHRoPSIxMjAwIiBoZWlnaHQ9IjU2MCIgZmlsbD0iI2YzZjRmNSIvPgogICAgCiAgICA8cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSIxMTYwIiBoZWlnaHQ9Ijc4IiByeD0iMTAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2RmZTFlMyIvPgogICAgPHRleHQgeD0iNDgiIHk9IjcyIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDIiIGZvbnQtd2VpZ2h0PSI4MDAiIGZpbGw9IiNlZjJiMjUiPkdBUkRBPC90ZXh0PgogICAgPHRleHQgeD0iMjE4IiB5PSI3MiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjQyIiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjNWE1ZDYzIj5XT1JMRDwvdGV4dD4KICAgIDxjaXJjbGUgY3g9IjExMzUiIGN5PSI1OSIgcj0iMjUiIGZpbGw9IiNmN2VhZDAiLz4KICAgIDx0ZXh0IHg9IjExMzUiIHk9IjY3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiM4YjZjMzUiPkpTPC90ZXh0PgogICAgCiAgICA8cmVjdCB4PSIzNSIgeT0iMTMwIiB3aWR0aD0iMTEzMCIgaGVpZ2h0PSIzNTUiIHJ4PSIxMCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjZDlkY2RmIi8+CiAgICA8dGV4dCB4PSI2NSIgeT0iMTcwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMzMDM0M2EiPk15IEFwcHJhaXNhbHM8L3RleHQ+CiAgICA8dGV4dCB4PSI2NSIgeT0iMTk2IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM3YTdmODUiPkN1cnJlbnQgYW5kIGhpc3RvcmljYWwgYXBwcmFpc2FsIHJlY29yZHM8L3RleHQ+CiAgICA8cmVjdCB4PSI2NSIgeT0iMjIwIiB3aWR0aD0iMTA3MCIgaGVpZ2h0PSI0OCIgcng9IjUiIGZpbGw9IiNmNWY2ZjciLz4KICAgIDx0ZXh0IHg9Ijg1IiB5PSIyNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzU1NSI+QVBQUkFJU0FMIFNUQUdFPC90ZXh0PgogICAgPHRleHQgeD0iNDEwIiB5PSIyNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzU1NSI+U1RBVFVTPC90ZXh0PgogICAgPHRleHQgeD0iNjUwIiB5PSIyNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzU1NSI+TEFTVCBVUERBVEVEPC90ZXh0PgogICAgPHRleHQgeD0iOTAwIiB5PSIyNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMSIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzU1NSI+QUNUSU9OPC90ZXh0PgogICAgCiAgICAgICAgPGxpbmUgeDE9IjY1IiB5MT0iMzI4IiB4Mj0iMTEzNSIgeTI9IjMyOCIgc3Ryb2tlPSIjZTRlNWU3Ii8+CiAgICAgICAgPHRleHQgeD0iODUiIHk9IjMwNyIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjMzMzIj5TdGFydCBGWSBHb2FsIFNldHRpbmc8L3RleHQ+CiAgICAgICAgPHJlY3QgeD0iNDEwIiB5PSIyODgiIHdpZHRoPSI5MCIgaGVpZ2h0PSIyNSIgcng9IjEyIiBmaWxsPSIjZjZlMmU0Ii8+CiAgICAgICAgPHRleHQgeD0iNDU1IiB5PSIzMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2VmMmIyNSI+QXBwcm92ZWQ8L3RleHQ+CiAgICAgICAgPHRleHQgeD0iNjUwIiB5PSIzMDciIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzU1NSI+MTIgQXByIDIwMjY8L3RleHQ+CiAgICAgICAgPHRleHQgeD0iOTAwIiB5PSIzMDciIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2VmMmIyNSI+VmlldzwvdGV4dD4KICAgICAgICAKICAgICAgICA8bGluZSB4MT0iNjUiIHkxPSIzOTAiIHgyPSIxMTM1IiB5Mj0iMzkwIiBzdHJva2U9IiNlNGU1ZTciLz4KICAgICAgICA8dGV4dCB4PSI4NSIgeT0iMzY5IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiMzMzMiPk1pZCBZZWFyIFJldmlldzwvdGV4dD4KICAgICAgICA8cmVjdCB4PSI0MTAiIHk9IjM1MCIgd2lkdGg9IjkwIiBoZWlnaHQ9IjI1IiByeD0iMTIiIGZpbGw9IiNmNmUyZTQiLz4KICAgICAgICA8dGV4dCB4PSI0NTUiIHk9IjM2NyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjZWYyYjI1Ij5QZW5kaW5nPC90ZXh0PgogICAgICAgIDx0ZXh0IHg9IjY1MCIgeT0iMzY5IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM1NTUiPuKAlDwvdGV4dD4KICAgICAgICA8dGV4dCB4PSI5MDAiIHk9IjM2OSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjZWYyYjI1Ij5Db250aW51ZTwvdGV4dD4KICAgICAgICAKICAgICAgICA8bGluZSB4MT0iNjUiIHkxPSI0NTIiIHgyPSIxMTM1IiB5Mj0iNDUyIiBzdHJva2U9IiNlNGU1ZTciLz4KICAgICAgICA8dGV4dCB4PSI4NSIgeT0iNDMxIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiMzMzMiPkVuZCBZZWFyIFJldmlldzwvdGV4dD4KICAgICAgICA8cmVjdCB4PSI0MTAiIHk9IjQxMiIgd2lkdGg9IjkwIiBoZWlnaHQ9IjI1IiByeD0iMTIiIGZpbGw9IiNmNmUyZTQiLz4KICAgICAgICA8dGV4dCB4PSI0NTUiIHk9IjQyOSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjZWYyYjI1Ij5Ob3QgU3RhcnRlZDwvdGV4dD4KICAgICAgICA8dGV4dCB4PSI2NTAiIHk9IjQzMSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjNTU1Ij7igJQ8L3RleHQ+CiAgICAgICAgPHRleHQgeD0iOTAwIiB5PSI0MzEiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI2VmMmIyNSI+T3BlbjwvdGV4dD4KICAgICAgICAKICAgIDwvc3ZnPg==" alt="Appraisal status and handoff — illustrative application screen"><figcaption>Appraisal status and handoff — illustrative application screen</figcaption></figure>
+      <ul class="notif-list">
+        <li><span class="bell">●</span> An appraisal cycle opens</li>
+        <li><span class="bell">●</span> An employee submits an appraisal</li>
+        <li><span class="bell">●</span> A manager approves or rejects an appraisal</li>
+        <li><span class="bell">●</span> Resubmission is required</li>
+      </ul>
+    </section>
+
+    <footer>GardaWorld — Performance Appraisal System User Manual</footer>
+  </main>
+</div>
+
+<script>
+  const links = document.querySelectorAll('nav.side a');
+  const sections = Array.from(links).map(l => document.querySelector(l.getAttribute('href')));
+  function onScroll(){
+    let idx = 0;
+    const y = window.scrollY + 120;
+    sections.forEach((s,i) => { if(s && s.offsetTop <= y) idx = i; });
+    links.forEach(l => l.classList.remove('active'));
+    if(links[idx]) links[idx].classList.add('active');
+  }
+  window.addEventListener('scroll', onScroll);
+  onScroll();
+</script>
+
+</body>
+</html>
