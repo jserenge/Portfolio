@@ -189,10 +189,10 @@ function initProjectTilt() {
    ============================================ */
 const projectDocs = {
     'credit-risk': {
-        title: 'Credit Risk Model - Documentation',
-        file: 'assets/docs/credit-risk-documentation.pdf',
-        type: 'pdf',
-        fallbackMessage: 'Credit Risk Model documentation and architecture overview'
+        title: 'Production Credit Scoring Architecture',
+        file: 'assets/flowcharts/credit_scoring_architecture.html',
+        type: 'html',
+        fallbackMessage: 'Credit scoring system architecture'
     },
     'mophones': {
         title: 'MoPhones Portfolio - Case Study',
@@ -202,15 +202,15 @@ const projectDocs = {
     },
     'forecasting': {
         title: 'Sales Forecasting - Architecture',
-        file: 'assets/docs/sales-forecasting-architecture.pdf',
-        type: 'pdf',
+        file: 'assets/flowcharts/sales_forecasting_architecture.html',
+        type: 'html',
         fallbackMessage: 'Sales forecasting system architecture and methodology'
     },
     'chatbot': {
-        title: 'AI Chatbot - System Flowchart',
-        file: 'assets/docs/chatbot-flowchart.pdf',
-        type: 'pdf',
-        fallbackMessage: 'AI customer support chatbot system flowchart'
+        title: 'Support Copilot RAG Architecture',
+        file: 'assets/flowcharts/support_copilot_rag.html',
+        type: 'html',
+        fallbackMessage: 'Support copilot retrieval-augmented generation architecture'
     },
     'bigdata': {
         title: 'Big Data Pipeline - Diagram',
@@ -276,17 +276,16 @@ function showDocumentViewer(doc) {
     modalTitle.textContent = doc.title;
     modalDownload.href = doc.file;
 
-    // Check if file exists by trying to load it, otherwise show placeholder
-    // For GitHub Pages static hosting, we use iframe for PDFs
-    if (doc.type === 'pdf') {
+    // GitHub Pages can display both PDFs and standalone HTML diagrams in an iframe.
+    if (doc.type === 'pdf' || doc.type === 'html') {
         docViewer.innerHTML = `
-            <iframe src="${doc.file}" type="application/pdf">
+            <iframe src="${doc.file}" type="${doc.type === 'pdf' ? 'application/pdf' : 'text/html'}" title="${doc.title}">
                 <div class="doc-placeholder">
-                    <i class="fas fa-file-pdf"></i>
-                    <h4>PDF Viewer</h4>
+                    <i class="fas fa-project-diagram"></i>
+                    <h4>Architecture Diagram</h4>
                     <p>${doc.fallbackMessage}</p>
-                    <a href="${doc.file}" download class="btn btn-primary">
-                        <i class="fas fa-download"></i> Download PDF
+                    <a href="${doc.file}" target="_blank" rel="noopener" class="btn btn-primary">
+                        <i class="fas fa-external-link-alt"></i> Open Diagram
                     </a>
                 </div>
             </iframe>
