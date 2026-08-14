@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', function() {
     initContactForm();
     initScrollAnimations();
     initProjectTilt();
+    initProjectClicks();
+    initFabricInteractions();
+    initPowerPlatformCards();
+    initBiTabs();
 });
 
 /* ============================================
@@ -205,10 +209,10 @@ const projectDocs = {
         fallbackMessage: 'Credit scoring system architecture'
     },
     'mophones': {
-        title: 'MoPhones Portfolio - Case Study',
-        file: 'assets/docs/mophones-case-study.pptx',
-        type: 'pptx',
-        fallbackMessage: 'MoPhones portfolio analysis case study presentation'
+        title: 'MoPhones Portfolio - Live Demo',
+        type: 'external',
+        url: 'https://mophones-ksstnmfcqgr6rjsdpspc8r.streamlit.app/',
+        fallbackMessage: 'MoPhones live Streamlit app (opens in new tab)'
     },
     'forecasting': {
         title: 'Sales Forecasting - Architecture',
@@ -234,6 +238,32 @@ const projectDocs = {
         type: 'pptx',
         fallbackMessage: 'Power BI enterprise dashboard screenshots and walkthrough'
     }
+};
+
+// Additional Power Platform prototypes (placeholders - copy HTML prototypes into assets/docs/)
+projectDocs['gardaworld-appraisal'] = {
+    title: 'GardaWorld Appraisal - Prototype',
+    file: 'assets/docs/gardaworld-appraisal-manual-application-screens.html',
+    type: 'html',
+    fallbackMessage: 'GardaWorld appraisal prototype'
+};
+projectDocs['employee-meal'] = {
+    title: 'Employee Meal Selection - Prototype',
+    file: 'assets/docs/dataposit-meals-manual-designed-built.html',
+    type: 'html',
+    fallbackMessage: 'Employee meal selection prototype'
+};
+projectDocs['pm-ticket'] = {
+    title: 'PM Ticket Follow-up - Prototype',
+    file: 'assets/docs/dataposit-ticketing-manual-designed-built.html',
+    type: 'html',
+    fallbackMessage: 'PM ticket follow-up prototype'
+};
+projectDocs['garda-journey'] = {
+    title: 'Garda Journey Management Automation',
+    file: 'assets/docs/gardaworld-journey-management-automation-proposal.html',
+    type: 'html',
+    fallbackMessage: 'Journey management automation proposal'
 };
 
 const flowchartDocs = {
@@ -285,6 +315,12 @@ function showDocumentViewer(doc) {
 
     modalTitle.textContent = doc.title;
     modalDownload.href = doc.file;
+
+    // External links are opened in a new tab.
+    if (doc.type === 'external' && doc.url) {
+        window.open(doc.url, '_blank', 'noopener');
+        return;
+    }
 
     // GitHub Pages can display both PDFs and standalone HTML diagrams in an iframe.
     if (doc.type === 'pdf' || doc.type === 'html') {
@@ -428,6 +464,92 @@ function initScrollAnimations() {
         el.style.transform = 'translateY(30px)';
         el.style.transition = `all 0.6s ease ${index * 0.1}s`;
         observer.observe(el);
+    });
+}
+
+/* ============================================
+   NEW: Project Click Handlers & Sections
+   ============================================ */
+function initProjectClicks() {
+    document.querySelectorAll('.project-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+            // Ignore clicks on interactive children
+            if (e.target.closest('a') || e.target.closest('button')) return;
+
+            const link = card.dataset.link;
+            const doc = card.dataset.doc || card.dataset.project;
+
+            if (link) {
+                window.open(link, '_blank', 'noopener');
+                return;
+            }
+
+            if (doc) {
+                openModal(doc);
+                return;
+            }
+
+            showToast('No live demo or case study available yet.');
+        });
+
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                card.click();
+            }
+        });
+    });
+}
+
+function initFabricInteractions() {
+    const nodes = document.querySelectorAll('.fabric-node');
+    if (!nodes) return;
+
+    nodes.forEach(node => {
+        node.addEventListener('click', () => {
+            const title = node.querySelector('h4')?.textContent || 'Detail';
+            const desc = node.getAttribute('data-tooltip') || '';
+            const modalTitle = document.getElementById('modalTitle');
+            const docViewer = document.getElementById('docViewer');
+            modalTitle.textContent = title;
+            docViewer.innerHTML = `
+                <div class="doc-placeholder">
+                    <h4 style="margin-bottom:8px;">${title}</h4>
+                    <p style="color:var(--text-secondary);">${desc}</p>
+                </div>
+            `;
+            document.getElementById('modalDownload').href = '#';
+            document.getElementById('docModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+}
+
+function initPowerPlatformCards() {
+    document.querySelectorAll('.pp-card').forEach(card => {
+        card.tabIndex = 0;
+        card.addEventListener('click', () => {
+            const doc = card.dataset.doc;
+            if (doc) openModal(doc);
+        });
+        card.addEventListener('keydown', (e) => { if (e.key === 'Enter') card.click(); });
+    });
+}
+
+function initBiTabs() {
+    const tabs = document.querySelectorAll('.tab-btn');
+    const panels = document.querySelectorAll('.category-panel');
+    if (!tabs.length) return;
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            const cat = tab.dataset.cat;
+            panels.forEach(p => {
+                p.style.display = (p.dataset.cat === cat) ? '' : 'none';
+            });
+        });
     });
 }
 
