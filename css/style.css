@@ -549,6 +549,7 @@ section {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 32px;
+    perspective: 1200px;
 }
 
 .project-card {
@@ -556,19 +557,38 @@ section {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     overflow: hidden;
-    transition: var(--transition);
+    position: relative;
+    transform: translate3d(0, 0, 0) rotateX(0) rotateY(0);
+    transform-style: preserve-3d;
+    transition: transform 220ms ease-out, border-color 220ms ease, box-shadow 220ms ease;
+    will-change: transform;
 }
 
 .project-card:hover {
-    transform: translateY(-8px);
     border-color: var(--primary-light);
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.32), 0 0 28px rgba(99, 102, 241, 0.2);
+}
+
+.project-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.22), transparent 42%);
+    opacity: 0;
+    transition: opacity 180ms ease;
+    z-index: 2;
+}
+
+.project-card.is-tilting::after {
+    opacity: 1;
 }
 
 .project-image {
     position: relative;
     height: 200px;
     overflow: hidden;
+    transform: translateZ(22px);
 }
 
 .project-placeholder {
@@ -616,6 +636,20 @@ section {
 
 .project-info {
     padding: 24px;
+    position: relative;
+    z-index: 3;
+    transform: translateZ(14px);
+}
+
+@media (prefers-reduced-motion: reduce), (hover: none) {
+    .project-card {
+        transform: none !important;
+        transition: border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .project-card::after {
+        display: none;
+    }
 }
 
 .project-tags {
