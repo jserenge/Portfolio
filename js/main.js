@@ -36,12 +36,24 @@ function initNavbar() {
     });
 
     // Mobile toggle
+    const closeMenu = () => {
+        navMenu.classList.remove('active');
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.setAttribute('aria-label', 'Open navigation');
+        document.body.classList.remove('menu-open');
+        navToggle.querySelectorAll('span').forEach(span => { span.style.transform = ''; span.style.opacity = ''; });
+    };
+
     navToggle.addEventListener('click', () => {
         navMenu.classList.toggle('active');
+        const isOpen = navMenu.classList.contains('active');
+        navToggle.setAttribute('aria-expanded', String(isOpen));
+        navToggle.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
+        document.body.classList.toggle('menu-open', isOpen);
 
         // Animate hamburger to X
         const spans = navToggle.querySelectorAll('span');
-        if (navMenu.classList.contains('active')) {
+        if (isOpen) {
             spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
             spans[1].style.opacity = '0';
             spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
@@ -55,13 +67,10 @@ function initNavbar() {
     // Close mobile menu on link click
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
-            navMenu.classList.remove('active');
-            const spans = navToggle.querySelectorAll('span');
-            spans[0].style.transform = '';
-            spans[1].style.opacity = '';
-            spans[2].style.transform = '';
+            closeMenu();
         });
     });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') closeMenu(); });
 }
 
 function updateActiveNavLink() {
@@ -90,6 +99,7 @@ function updateActiveNavLink() {
 function initParticles() {
     const container = document.getElementById('particles');
     if (!container) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const particleCount = 30;
 
