@@ -231,13 +231,12 @@ const projectDocs = {
     file: 'assets/docs/bigdata-pipeline-diagram.html',
     type: 'html',
     fallbackMessage: 'Enterprise big data pipeline architecture diagram'
-}
     },
     'powerbi': {
-        title: 'Power BI Dashboards - Screenshots',
-        file: 'assets/docs/powerbi-dashboard-screenshots.pptx',
-        type: 'pptx',
-        fallbackMessage: 'Power BI enterprise dashboard screenshots and walkthrough'
+    title: 'Power BI Dashboards - Screenshots',
+    file: 'assets/docs/jd-bi-loan-portfolio-dashboard.html',
+    type: 'html',
+    fallbackMessage: 'Power BI enterprise dashboard screenshots and walkthrough'
     }
 };
 
