@@ -222,14 +222,14 @@ const projectDocs = {
     },
     'chatbot': {
         title: 'Support Copilot RAG Architecture',
-        file: 'assets/flowcharts/support_copilot_rag.html',
+        file: 'assets/flowcharts/support-copilot-rag-pipeline',
         type: 'html',
         fallbackMessage: 'Support copilot retrieval-augmented generation architecture'
     },
     'bigdata': {
         title: 'Big Data Pipeline - Diagram',
-        file: 'assets/docs/bigdata-pipeline-diagram.pdf',
-        type: 'pdf',
+        file: 'assets/docs/bigdata-pipeline-diagram.html',
+        type: 'html',
         fallbackMessage: 'Enterprise big data pipeline architecture diagram'
     },
     'powerbi': {
