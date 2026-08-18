@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initNavbar();
     initParticles();
     initProjectFilter();
-    initSmoothScroll();
     initContactForm();
     initScrollAnimations();
     initProjectTilt();
@@ -104,14 +103,15 @@ function initParticles() {
     const container = document.getElementById('particles');
     if (!container) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    const particleCount = 30;
+    
+    // Reduce particles on mobile
+    const isMobile = window.innerWidth < 768;
+    const particleCount = isMobile ? 10 : 30;
 
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
 
-        // Random positioning and animation
         const x = Math.random() * 100;
         const y = Math.random() * 100;
         const size = Math.random() * 4 + 2;
@@ -182,10 +182,10 @@ function initProjectTilt() {
             const bounds = card.getBoundingClientRect();
             const x = (event.clientX - bounds.left) / bounds.width;
             const y = (event.clientY - bounds.top) / bounds.height;
-            const rotateY = (x - 0.5) * 10;
-            const rotateX = (0.5 - y) * 8;
+            const rotateY = (x - 0.5) * 6;
+            const rotateX = (0.5 - y) * 5;
 
-            card.style.transform = `translateY(-8px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            card.style.transform = `translateY(-6px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
             card.style.setProperty('--glare-x', `${x * 100}%`);
             card.style.setProperty('--glare-y', `${y * 100}%`);
             card.classList.add('is-tilting');
@@ -538,16 +538,29 @@ function initPowerPlatformCards() {
 
 function initBiTabs() {
     const tabs = document.querySelectorAll('.tab-btn');
-    const panels = document.querySelectorAll('.category-panel');
+    const panels = document.querySelectorAll('.dashboard-panel');
     if (!tabs.length) return;
 
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
+            // Update active tab
+            tabs.forEach(t => {
+                t.classList.remove('active');
+                t.setAttribute('aria-selected', 'false');
+            });
             tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+
+            // Show corresponding panel
             const cat = tab.dataset.cat;
             panels.forEach(p => {
-                p.style.display = (p.dataset.cat === cat) ? '' : 'none';
+                if (p.dataset.cat === cat) {
+                    p.classList.add('active');
+                    p.style.display = 'block';
+                } else {
+                    p.classList.remove('active');
+                    p.style.display = 'none';
+                }
             });
         });
     });
