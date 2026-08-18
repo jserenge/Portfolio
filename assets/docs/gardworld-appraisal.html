@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GardaWorld Appraisal Dashboard — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0A0E14;
+    --surface: #111820;
+    --surface-alt: #161e2a;
+    --teal: #2DD4BF;
+    --teal-dim: #1a9e8f;
+    --amber: #F59E0B;
+    --amber-dim: #b47a08;
+    --text: #E2E8F0;
+    --text-dim: #94A3B8;
+    --text-muted: #64748B;
+    --border: #1E293B;
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: -10%;
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(ellipse, rgba(45, 212, 191, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -20%;
+    right: -10%;
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(ellipse, rgba(245, 158, 11, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page-wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 48px 32px 64px;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--teal);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--teal);
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 700;
+    line-height: 1.1;
+    color: #F8FAFC;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+
+  .description {
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    max-width: 640px;
+    margin-bottom: 24px;
+  }
+
+  .tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 40px;
+  }
+  .tech-pill {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    background: var(--surface);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .tech-pill:hover {
+    border-color: var(--teal-dim);
+    color: var(--teal);
+  }
+
+  /* Tab Navigation */
+  .tab-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab-btn {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 18px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tab-btn:hover {
+    border-color: var(--teal-dim);
+    color: var(--text);
+  }
+  .tab-btn.active {
+    background: rgba(45, 212, 191, 0.1);
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+  .tab-btn .tab-num {
+    font-size: 11px;
+    opacity: 0.6;
+  }
+
+  /* Page container */
+  .page-container {
+    display: none;
+    animation: fadeIn 0.35s ease;
+  }
+  .page-container.active {
+    display: block;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .page-caption {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    line-height: 1.5;
+    padding-left: 4px;
+  }
+  .page-caption strong {
+    color: var(--text-dim);
+    font-weight: 600;
+  }
+
+  /* Browser Chrome Frame */
+  .browser-frame {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+  }
+  .browser-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    background: var(--surface-alt);
+    border-bottom: 1px solid var(--border);
+  }
+  .browser-dots {
+    display: flex;
+    gap: 7px;
+  }
+  .browser-dots span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+  .browser-dots span:nth-child(1) { background: #EF4444; }
+  .browser-dots span:nth-child(2) { background: #F59E0B; }
+  .browser-dots span:nth-child(3) { background: #22C55E; }
+  .browser-filename {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-muted);
+    flex: 1;
+    text-align: center;
+  }
+  .browser-content {
+    background: #FFFFFF;
+    cursor: zoom-in;
+    position: relative;
+    overflow: hidden;
+  }
+  .browser-content img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+
+  /* Lightbox */
+  .lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.94);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+    padding: 32px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .lightbox-overlay.active {
+    display: flex;
+    opacity: 1;
+  }
+  .lightbox-overlay img {
+    max-width: 95vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 0 60px rgba(0,0,0,0.5);
+  }
+  .lightbox-hint {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    background: rgba(17, 24, 32, 0.8);
+    padding: 8px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    pointer-events: none;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .footer-credit {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .footer-credit strong {
+    color: var(--text-dim);
+    font-weight: 600;
+  }
+  .footer-disclosure {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    max-width: 420px;
+    line-height: 1.5;
+  }
+
+  /* Keyboard hint */
+  .kb-hint {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .kb-key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    padding: 2px 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  @media (max-width: 768px) {
+    .page-wrapper { padding: 32px 16px 48px; }
+    .tab-nav { gap: 6px; }
+    .tab-btn { font-size: 12px; padding: 8px 14px; }
+    .footer { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- Eyebrow -->
+  <div class="eyebrow">Power BI · HR Appraisal Analytics</div>
+
+  <!-- H1 -->
+  <h1>GardaWorld Appraisal Dashboard</h1>
+
+  <!-- Description -->
+  <p class="description">
+    A multi-page performance appraisal report for GardaWorld covering appraisal completion rates, departmental goal tracking, and individual employee end-year ratings across five African countries and the UK.
+  </p>
+
+  <!-- Tech Stack -->
+  <div class="tech-stack">
+    <span class="tech-pill">Power BI</span>
+    <span class="tech-pill">DAX</span>
+    <span class="tech-pill">Power Query</span>
+    <span class="tech-pill">KPI Modeling</span>
+    <span class="tech-pill">HR Analytics</span>
+  </div>
+
+  <!-- Tab Navigation -->
+  <nav class="tab-nav" role="tablist" aria-label="Dashboard pages">
+    <button class="tab-btn active" role="tab" data-page="0" aria-selected="true">
+      <span class="tab-num">01</span> Appraisal Overview
+    </button>
+    <button class="tab-btn" role="tab" data-page="1" aria-selected="false">
+      <span class="tab-num">02</span> Departmental Overview
+    </button>
+    <button class="tab-btn" role="tab" data-page="2" aria-selected="false">
+      <span class="tab-num">03</span> Employee Performance
+    </button>
+  </nav>
+
+  <div class="kb-hint">
+    Navigate with <span class="kb-key">←</span> <span class="kb-key">→</span> arrow keys · click any screenshot to zoom
+  </div>
+
+  <!-- PAGE 1: Appraisal Overview -->
+  <div class="page-container active" id="page-0" role="tabpanel">
+    <p class="page-caption">
+      <strong>Page 1 — Appraisal Overview:</strong> Top-level KPIs showing total appraisals (9 of 400 employees), approval and pending rates, plus breakdowns by country (Tanzania, Kenya, UK, Rwanda, Zambia) and end-year performance distribution.
+    </p>
+    <div class="browser-frame">
+      <div class="browser-bar">
+        <div class="browser-dots"><span></span><span></span><span></span></div>
+        <div class="browser-filename">gardaworld-appraisal-overview.pbix</div>
+      </div>
+      <div class="browser-content" data-lightbox="0">
+        <img src="../images/gardaworld-page-01.png" alt="GardaWorld Appraisal Overview — Power BI page showing total appraisals vs employees gauge, approval/pending KPIs, country breakdown, completion rate by country, and end-year rating distribution." loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: Departmental Overview -->
+  <div class="page-container" id="page-1" role="tabpanel">
+    <p class="page-caption">
+      <strong>Page 2 — Departmental Overview:</strong> Filters for Fiscal Year, Country, Review Period, and Department. Shows goal approval status by department (Finance, HR, IT, Project Management) and goal completion rate per department.
+    </p>
+    <div class="browser-frame">
+      <div class="browser-bar">
+        <div class="browser-dots"><span></span><span></span><span></span></div>
+        <div class="browser-filename">gardaworld-departmental-overview.pbix</div>
+      </div>
+      <div class="browser-content" data-lightbox="1">
+        <img src="../images/gardaworld-page-02.png" alt="GardaWorld Departmental Overview — Power BI page showing goal approval status and goal completion rate per department with slicers for Fiscal Year, Country, Review Period, and Department." loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: Employee Performance -->
+  <div class="page-container" id="page-2" role="tabpanel">
+    <p class="page-caption">
+      <strong>Page 3 — Employee Performance:</strong> Individual-level detail with top performers (90%+), fully meeting (70–89%), and needs support (&lt;70%) counts, department and employee performance bars, and a full employee roster table with KPI settings and approval statuses.
+    </p>
+    <div class="browser-frame">
+      <div class="browser-bar">
+        <div class="browser-dots"><span></span><span></span><span></span></div>
+        <div class="browser-filename">gardaworld-employee-performance.pbix</div>
+      </div>
+      <div class="browser-content" data-lightbox="2">
+        <img src="../images/gardaworld-page-03.png" alt="GardaWorld Employee Performance — Power BI page showing top performers KPIs, department performance bars, employee performance bars, and detailed employee roster table with approval statuses." loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-credit">
+      Built by <strong>Qwen3.7</strong> · Portfolio viewer for GardaWorld Appraisal Dashboard<br>
+      Original report by DataposIT for GardaWorld
+    </div>
+    <div class="footer-disclosure">
+      ⚠ This page displays static screenshots of the original Power BI report. A live embed is not available due to licensing restrictions and the use of beta features that only render within the Power BI service.
+    </div>
+  </div>
+
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox-overlay" id="lightbox">
+  <img id="lightbox-img" src="" alt="Enlarged dashboard screenshot">
+  <div class="lightbox-hint">Click anywhere or press Esc to close</div>
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.tab-btn');
+  const pages = document.querySelectorAll('.page-container');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxTriggers = document.querySelectorAll('[data-lightbox]');
+
+  const imageSources = [
+    '../images/gardaworld-page-01.png',
+    '../images/gardaworld-page-02.png',
+    '../images/gardaworld-page-03.png'
+  ];
+
+  let currentPage = 0;
+
+  function switchPage(index) {
+    if (index < 0 || index >= pages.length) return;
+    currentPage = index;
+    tabs.forEach((t, i) => {
+      t.classList.toggle('active', i === index);
+      t.setAttribute('aria-selected', i === index ? 'true' : 'false');
+    });
+    pages.forEach((p, i) => {
+      p.classList.toggle('active', i === index);
+    });
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      switchPage(parseInt(tab.dataset.page, 10));
+    });
+  });
+
+  // Arrow key navigation
+  document.addEventListener('keydown', (e) => {
+    if (lightbox.classList.contains('active')) {
+      if (e.key === 'Escape') {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+      return;
+    }
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      switchPage((currentPage + 1) % pages.length);
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      switchPage((currentPage - 1 + pages.length) % pages.length);
+    }
+  });
+
+  // Lightbox
+  lightboxTriggers.forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const idx = parseInt(trigger.dataset.lightbox, 10);
+      lightboxImg.src = imageSources[idx];
+      lightboxImg.alt = trigger.querySelector('img').alt + ' — enlarged view';
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  lightbox.addEventListener('click', () => {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+  });
+</script>
+
+</body>
+</html>
