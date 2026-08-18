@@ -235,6 +235,10 @@ const portfolioDocs = {
     
     // BI Dashboards
     'powerbi': { title: 'Power BI Dashboards - Screenshots', file: 'assets/docs/jd-bi-loan-portfolio-dashboard.html', type: 'html', fallback: 'Power BI enterprise dashboard walkthrough' },
+    'loan-portfolio': { title: 'Loan Portfolio Dashboard', file: 'assets/docs/jd-bi-loan-portfolio-dashboard (1).html', type: 'html', fallback: 'Comprehensive loan portfolio analytics dashboard' },
+    'sales-analytics': { title: 'Sales Analytics Dashboard', file: 'assets/docs/sales-analytics.html', type: 'html', fallback: 'Sales performance and analytics dashboard' },
+    'hr-management': { title: 'HR Management Dashboard', file: 'assets/docs/hr-management-dashboard.html', type: 'html', fallback: 'Human resources management and analytics dashboard' },
+    'servicedesk': { title: 'Service Desk Performance Review', file: 'assets/docs/servicedesk-performance-review.html', type: 'html', fallback: 'IT service desk performance and SLA dashboard' },
     
     // Power Apps & Prototypes
     'gardaworld-appraisal': { title: 'GardaWorld Appraisal - Prototype', file: 'assets/docs/gardaworld-appraisal-manual-application-screens.html', type: 'html', fallback: 'GardaWorld appraisal prototype' },
@@ -248,7 +252,6 @@ const portfolioDocs = {
     'bi-architecture': { title: 'Enterprise BI Architecture', file: 'assets/flowcharts/bi-architecture.pdf', type: 'pdf', fallback: 'Semantic model, DAX layer, and dashboard architecture' },
     'copilot-integration': { title: 'Copilot + MCP Integration Workflow', file: 'assets/flowcharts/copilot-mcp-workflow.pptx', type: 'pptx', fallback: 'Microsoft Copilot and MCP server integration workflow' }
 };
-
 function initModals() {
     const modal = document.getElementById('docModal');
     if (modal) {
