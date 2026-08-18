@@ -226,11 +226,12 @@ const projectDocs = {
         type: 'html',
         fallbackMessage: 'Support copilot retrieval-augmented generation architecture'
     },
-    'bigdata': {
-        title: 'Big Data Pipeline - Diagram',
-        file: 'assets/docs/bigdata-pipeline-diagram.html',
-        type: 'html',
-        fallbackMessage: 'Enterprise big data pipeline architecture diagram'
+   'bigdata': {
+    title: 'Big Data Pipeline - Diagram',
+    file: 'assets/docs/bigdata-pipeline-diagram.html',
+    type: 'html',
+    fallbackMessage: 'Enterprise big data pipeline architecture diagram'
+}
     },
     'powerbi': {
         title: 'Power BI Dashboards - Screenshots',
