@@ -567,105 +567,148 @@
     </section>
 
     <!-- About Section (Now includes Certifications) -->
-    <section id="about" class="about">
-        <div class="container">
-            <div class="about-grid">
-                <div class="about-content">
+    <!-- About Section -->
+<section id="about" class="about">
+    <div class="container">
+        <!-- Main About Card -->
+        <div class="about-card">
+            <div class="about-card-header">
+                <div class="about-card-content">
                     <span class="section-tag">About Me</span>
-                    <h2>Turning Complex Data Into<br><span class="accent">Business Value</span></h2>
-                    <p>
-                        I'm a Data Engineer with 6+ years specializing in financial services analytics, credit risk modeling, 
-                        and business intelligence solutions. I bridge the gap between raw data and executive decision-making 
-                        through scalable architectures and intuitive visualizations.
+                    <h2>Hi, I'm <span class="accent">Jeremiah Daniel Serenge</span></h2>
+                    <p class="about-intro">
+                        I'm a Data Engineer based in Nairobi, Kenya with 6+ years of experience specializing in 
+                        financial services analytics, credit risk modeling, and business intelligence solutions.
                     </p>
                     <p>
-                        Currently at Dataposit Africa, I design ETL pipelines integrating ERP platforms into analytics-ready 
-                        models, build ML systems on Azure Databricks, and develop enterprise Power BI solutions that save 
-                        20+ hours weekly in manual reporting.
+                        My objective is to bridge the gap between raw data and executive decision-making through 
+                        scalable architectures and intuitive visualizations. I challenge myself to continuously 
+                        learn and improve my skills through different projects.
                     </p>
-                    <div class="about-highlights">
-                        <div class="highlight"><i class="fas fa-check-circle"></i><span>Azure & Databricks Certified</span></div>
-                        <div class="highlight"><i class="fas fa-check-circle"></i><span>Power BI Data Analyst (PwC)</span></div>
-                        <div class="highlight"><i class="fas fa-check-circle"></i><span>Machine Learning with Python (IBM)</span></div>
+                    
+                    <!-- Contact Info -->
+                    <div class="contact-grid-compact">
+                        <div class="contact-item-compact">
+                            <i class="fas fa-envelope"></i>
+                            <span>jeremyserenge@gmail.com</span>
+                        </div>
+                        <div class="contact-item-compact">
+                            <i class="fas fa-phone"></i>
+                            <span>+254 708 236 755</span>
+                        </div>
+                        <div class="contact-item-compact">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Nairobi, Kenya</span>
+                        </div>
+                        <div class="contact-item-compact">
+                            <i class="fab fa-linkedin"></i>
+                            <span>linkedin.com/in/serenge-daniel</span>
+                        </div>
                     </div>
                 </div>
-                <div class="about-visual">
-                    <div class="about-photo">
-                        <img src="assets/images/jnew.jpg" alt="Jeremiah Daniel Serenge - Data Engineer & Analytics Professional" loading="lazy">
-                        <p class="photo-caption"><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</p>
+                
+                <div class="about-photo-modern">
+                    <img src="assets/images/jnew.jpg" alt="Jeremiah Daniel Serenge">
+                    <div class="photo-badge">
+                        <i class="fas fa-code"></i> Data Engineer
                     </div>
-                    <div class="code-window" style="margin-top: 32px;">
-                        <div class="window-header">
-                            <div class="window-dot red"></div><div class="window-dot yellow"></div><div class="window-dot green"></div>
-                            <span class="window-title">pipeline.py</span>
-                        </div>
-                        <div class="window-body">
-                            <pre><code><span class="code-keyword">from</span> azure.identity <span class="code-keyword">import</span> DefaultAzureCredential
-<span class="code-keyword">from</span> azure.ai.ml <span class="code-keyword">import</span> MLClient
-
-<span class="code-comment"># Build production ETL pipeline</span>
-<span class="code-keyword">def</span> <span class="code-function">extract_transform_load</span>(source, target):
-    df = spark.read.format(<span class="code-string">"delta"</span>).load(source)
-    df_clean = df.filter(df.quality == <span class="code-string">"valid"</span>)
-    df_clean.write.mode(<span class="code-string">"overwrite"</span>).saveAsTable(target)
-    <span class="code-keyword">return</span> <span class="code-string">"Pipeline executed"</span></code></pre>
-                        </div>
-                    </div
-</div>
+                </div>
             </div>
-
-            <!-- Integrated Certifications Grid -->
-            <div style="margin-top: 80px;">
-                <div class="section-header">
-                    <span class="section-tag">Credentials</span>
-                    <h2 class="section-title">Licenses & Certifications</h2>
+            
+            <!-- Skills & Education Grid -->
+            <div class="about-details-grid">
+                <!-- Education -->
+                <div class="about-detail-card">
+                    <h3><i class="fas fa-graduation-cap"></i> Education</h3>
+                    <div class="education-item">
+                        <span class="edu-year">2020 - 2024</span>
+                        <h4>Bachelor's Degree</h4>
+                        <p>Relevant coursework in Data Science, Statistics, and Computer Science</p>
+                    </div>
                 </div>
-                <div class="certifications-grid">
-                    <div class="certification-card">
-                        <div class="cert-issuer"><div class="cert-logo">MS</div><div class="cert-issuer-info"><h4>Microsoft</h4><span>Issued Jun 2026</span></div></div>
-                        <h3>AI Skills Fest 2026</h3>
-                        <div class="cert-date"><i class="fas fa-calendar-check"></i> June 2026</div>
-                        <a href="#" class="cert-link" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> Show credential</a>
+                
+                <!-- Technical Skills -->
+                <div class="about-detail-card">
+                    <h3><i class="fas fa-laptop-code"></i> Technical Skills</h3>
+                    <div class="tech-skills-grid">
+                        <div class="skill-badge azure"><i class="fab fa-microsoft"></i> Azure</div>
+                        <div class="skill-badge databricks"><i class="fas fa-database"></i> Databricks</div>
+                        <div class="skill-badge python"><i class="fab fa-python"></i> Python</div>
+                        <div class="skill-badge sql"><i class="fas fa-database"></i> SQL</div>
+                        <div class="skill-badge powerbi"><i class="fas fa-chart-bar"></i> Power BI</div>
+                        <div class="skill-badge spark"><i class="fas fa-bolt"></i> Spark</div>
                     </div>
-                    <div class="certification-card">
-                        <div class="cert-issuer"><div class="cert-logo">UP</div><div class="cert-issuer-info"><h4>University of Pennsylvania</h4><span>Issued Jun 2026</span></div></div>
-                        <h3>Fundamentals of Quantitative Modeling</h3>
-                        <div class="cert-date"><i class="fas fa-calendar-check"></i> June 2026</div>
-                        <p class="cert-id">Credential ID: 3GWSTHP5S7ZC</p>
-                        <a href="#" class="cert-link" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> Show credential</a>
+                </div>
+                
+                <!-- Soft Skills -->
+                <div class="about-detail-card">
+                    <h3><i class="fas fa-users"></i> Soft Skills</h3>
+                    <div class="soft-skills-list">
+                        <div class="soft-skill-item">
+                            <span>Problem Solving</span>
+                            <div class="skill-bar"><div class="skill-progress" style="width: 95%"></div></div>
+                        </div>
+                        <div class="soft-skill-item">
+                            <span>Critical Thinking</span>
+                            <div class="skill-bar"><div class="skill-progress" style="width: 90%"></div></div>
+                        </div>
+                        <div class="soft-skill-item">
+                            <span>Communication</span>
+                            <div class="skill-bar"><div class="skill-progress" style="width: 88%"></div></div>
+                        </div>
+                        <div class="soft-skill-item">
+                            <span>Team Leadership</span>
+                            <div class="skill-bar"><div class="skill-progress" style="width: 85%"></div></div>
+                        </div>
                     </div>
-                    <div class="certification-card">
-                        <div class="cert-issuer"><div class="cert-logo">IBM</div><div class="cert-issuer-info"><h4>IBM</h4><span>Issued May 2025</span></div></div>
-                        <h3>Tools for Data Science</h3>
-                        <div class="cert-date"><i class="fas fa-calendar-check"></i> May 2025</div>
-                        <p class="cert-id">Credential ID: 6BA8XYDHR7JS</p>
-                        <a href="#" class="cert-link" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> Show credential</a>
+                </div>
+                
+                <!-- Core Competencies -->
+                <div class="about-detail-card">
+                    <h3><i class="fas fa-star"></i> Core Competencies</h3>
+                    <div class="competencies-list">
+                        <div class="competency-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Data Pipeline Engineering</span>
+                        </div>
+                        <div class="competency-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Machine Learning & MLOps</span>
+                        </div>
+                        <div class="competency-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Business Intelligence</span>
+                        </div>
+                        <div class="competency-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Cloud Architecture (Azure)</span>
+                        </div>
+                        <div class="competency-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Data Modeling & ETL</span>
+                        </div>
+                        <div class="competency-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Agile Methodologies</span>
+                        </div>
                     </div>
-                    <div class="certification-card">
-                        <div class="cert-issuer"><div class="cert-logo">IBM</div><div class="cert-issuer-info"><h4>IBM</h4><span>Issued Jan 2023</span></div></div>
-                        <h3>Machine Learning with Python</h3>
-                        <div class="cert-date"><i class="fas fa-calendar-check"></i> January 2023</div>
-                        <p class="cert-id">Credential ID: E6L8ZU8C8T93</p>
-                        <a href="#" class="cert-link" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> Show credential</a>
-                    </div>
-                    <div class="certification-card">
-                        <div class="cert-issuer"><div class="cert-logo">IBM</div><div class="cert-issuer-info"><h4>IBM</h4><span>Issued May 2025</span></div></div>
-                        <h3>What is Data Science?</h3>
-                        <div class="cert-date"><i class="fas fa-calendar-check"></i> May 2025</div>
-                        <p class="cert-id">Credential ID: 6CR2Q37Y9DIE</p>
-                        <a href="#" class="cert-link" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> Show credential</a>
-                    </div>
-                    <div class="certification-card">
-                        <div class="cert-issuer"><div class="cert-logo">PwC</div><div class="cert-issuer-info"><h4>Forage</h4><span>Issued Jan 2025</span></div></div>
-                        <h3>PwC Switzerland - Power BI Job Simulation</h3>
-                        <div class="cert-date"><i class="fas fa-calendar-check"></i> January 2025</div>
-                        <p class="cert-id">Credential ID: 6zkmHcKEXqpoNQiB4</p>
-                        <a href="#" class="cert-link" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> Show credential</a>
-                    </div>
+                </div>
+            </div>
+            
+            <!-- Interests -->
+            <div class="about-interests">
+                <h3><i class="fas fa-heart"></i> Interests</h3>
+                <div class="interests-tags">
+                    <span class="interest-tag"><i class="fas fa-brain"></i> Artificial Intelligence</span>
+                    <span class="interest-tag"><i class="fas fa-chart-line"></i> Data Analytics</span>
+                    <span class="interest-tag"><i class="fas fa-cloud"></i> Cloud Computing</span>
+                    <span class="interest-tag"><i class="fas fa-robot"></i> Automation</span>
+                    <span class="interest-tag"><i class="fas fa-book"></i> Continuous Learning</span>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Contact Section -->
     <section id="contact" class="contact">
