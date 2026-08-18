@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- Inline styles for Microsoft Fabric section (kept local for easy iteration) -->
+    <!-- Inline styles for specialized sections -->
     <style>
     /* Microsoft Fabric section styles */
     .fabric {
@@ -20,60 +20,74 @@
     }
     .fabric-header { text-align: center; margin-bottom: 28px; }
     .fabric-desc { color: var(--text-secondary); max-width:800px; margin: 0 auto 28px; }
-
     .fabric-diagram {
         display:flex; flex-wrap:wrap; gap:20px; align-items:center; justify-content:center;
         --node-size: 160px;
     }
-
     .fabric-node {
-        width: var(--node-size);
-        min-width: 140px;
+        width: var(--node-size); min-width: 140px;
         background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
         border: 1px solid rgba(71,85,105,0.25);
-        padding: 16px;
-        border-radius: 12px;
-        text-align:center;
-        color: var(--text-primary);
-        position: relative;
-        transition: transform 220ms ease, box-shadow 220ms ease;
-        cursor: pointer;
+        padding: 16px; border-radius: 12px; text-align:center; color: var(--text-primary);
+        position: relative; transition: transform 220ms ease, box-shadow 220ms ease; cursor: pointer;
     }
-
     .fabric-node:focus { outline: 2px solid rgba(99,102,241,0.25); outline-offset: 4px; }
-
     .fabric-node .node-icon {
         width:56px; height:56px; margin: 0 auto 8px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; color:white;
-        background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
-        box-shadow: 0 6px 18px rgba(6,182,212,0.08);
+        background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%); box-shadow: 0 6px 18px rgba(6,182,212,0.08);
     }
-
     .fabric-node h4 { font-size: 0.98rem; margin: 8px 0 6px; }
     .fabric-node p { color: var(--text-muted); font-size: 0.85rem; margin:0; }
-
-    /* connectors for large screens (visual only) */
     .fabric-diagram .connector {
         width: 40px; height: 2px; background: linear-gradient(90deg, rgba(99,102,241,0.6), rgba(6,182,212,0.6)); align-self:center; border-radius:4px;
     }
-
-    /* tooltip (hover) */
     .fabric-node .tooltip {
         display:none; position:absolute; left:50%; transform:translateX(-50%); bottom:calc(100% + 12px); width:260px; background:var(--bg-card); border:1px solid var(--border); padding:12px; border-radius:8px; color:var(--text-secondary); font-size:0.85rem; box-shadow:var(--shadow-lg); z-index:50;
     }
     .fabric-node .tooltip::after { content:''; position:absolute; left:50%; transform:translateX(-50%); top:100%; width:0; height:0; border-left:8px solid transparent; border-right:8px solid transparent; border-top:8px solid var(--bg-card); }
     .fabric-node:hover .tooltip, .fabric-node:focus .tooltip { display:block; }
-
-    /* responsive stacking */
     @media (max-width: 900px) {
         .fabric-diagram { flex-direction:column; }
         .fabric-diagram .connector { display:none; }
         .fabric-node { width: 100%; max-width:520px; }
         .fabric-node .tooltip { left: calc(100% + 12px); transform:none; top:50%; bottom:auto; }
     }
+
+    /* Certifications Grid (Moved to About Section) */
+    .certifications-grid {
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; margin-top: 40px;
+    }
+    .certification-card {
+        background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: var(--transition);
+    }
+    .certification-card:hover { border-color: var(--primary-light); transform: translateY(-4px); }
+    .cert-issuer { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .cert-logo {
+        width: 40px; height: 40px; background: var(--gradient-1); border-radius: 8px;
+        display: flex; align-items: center; justify-content: center; font-weight: 800; color: white; font-size: 0.9rem;
+    }
+    .cert-issuer-info h4 { font-size: 0.95rem; margin-bottom: 2px; }
+    .cert-issuer-info span { font-size: 0.8rem; color: var(--text-muted); }
+    .certification-card h3 { font-size: 1.05rem; margin-bottom: 12px; line-height: 1.4; }
+    .cert-date { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .cert-id { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px; font-family: 'JetBrains Mono', monospace; }
+    .cert-link {
+        display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--primary-light); text-decoration: none; font-weight: 500;
+    }
+    .cert-link:hover { color: var(--accent); }
+
+    /* Subsection Titles for Unified Portfolio */
+    .subsection-title {
+        text-align: center; font-size: 1.4rem; margin: 60px 0 32px; color: var(--text-primary); font-weight: 700;
+        position: relative; display: inline-block; width: 100%;
+    }
+    .subsection-title::after {
+        content: ''; display: block; width: 60px; height: 3px; background: var(--gradient-1); margin: 12px auto 0; border-radius: 2px;
+    }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
+    <!-- Navigation (Reduced to 6 clean links) -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <a href="#" class="nav-logo">
@@ -85,13 +99,9 @@
             <ul class="nav-menu" id="navMenu" role="navigation" aria-label="Main navigation">
                 <li><a href="#home" class="nav-link active">Home</a></li>
                 <li><a href="#expertise" class="nav-link">Expertise</a></li>
-                <li><a href="#fabric" class="nav-link">Fabric</a></li>
-                <li><a href="#projects" class="nav-link">Projects</a></li>
-                <li><a href="#bi-dashboards" class="nav-link">BI Dashboards</a></li>
-                <li><a href="#power-apps" class="nav-link">Power Apps</a></li>
+                <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
                 <li><a href="#process" class="nav-link">Process</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#certifications" class="nav-link">Certifications</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
         </div>
@@ -131,8 +141,8 @@
                     </div>
                 </div>
                 <div class="hero-cta">
-                    <a href="#projects" class="btn btn-primary">
-                        <i class="fas fa-rocket"></i> View Projects
+                    <a href="#portfolio" class="btn btn-primary">
+                        <i class="fas fa-rocket"></i> View Portfolio
                     </a>
                     <a href="assets/docs/JEREMIAH_DANIEL_SERENGE_CV.pdf" class="btn btn-outline" target="_blank">
                         <i class="fas fa-download"></i> Download CV
@@ -155,50 +165,34 @@
             </div>
             <div class="expertise-grid">
                 <div class="expertise-card">
-                    <div class="card-icon">
-                        <i class="fas fa-database"></i>
-                    </div>
+                    <div class="card-icon"><i class="fas fa-database"></i></div>
                     <h3>Data Engineering & ETL</h3>
                     <p>Azure, Databricks, Apache Spark, SQL, DBT. Scalable pipelines integrating ERP systems (Dynamics 365, SAP) into analytics-ready models.</p>
-                    <div class="tech-tags">
-                        <span>Azure</span><span>Databricks</span><span>Spark</span><span>SQL</span><span>DBT</span>
-                    </div>
+                    <div class="tech-tags"><span>Azure</span><span>Databricks</span><span>Spark</span><span>SQL</span><span>DBT</span></div>
                 </div>
                 <div class="expertise-card">
-                    <div class="card-icon">
-                        <i class="fas fa-brain"></i>
-                    </div>
+                    <div class="card-icon"><i class="fas fa-brain"></i></div>
                     <h3>Machine Learning & MLOps</h3>
                     <p>Credit risk modeling, demand forecasting, inventory optimization. End-to-end ML pipelines with Azure AI Studio, FastAPI, and CI/CD.</p>
-                    <div class="tech-tags">
-                        <span>Python</span><span>scikit-learn</span><span>XGBoost</span><span>FastAPI</span><span>Azure ML</span>
-                    </div>
+                    <div class="tech-tags"><span>Python</span><span>scikit-learn</span><span>XGBoost</span><span>FastAPI</span><span>Azure ML</span></div>
                 </div>
                 <div class="expertise-card">
-                    <div class="card-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
+                    <div class="card-icon"><i class="fas fa-chart-line"></i></div>
                     <h3>Business Intelligence</h3>
                     <p>Enterprise Power BI solutions with semantic models, DAX measures, real-time dashboards, and self-service analytics platforms.</p>
-                    <div class="tech-tags">
-                        <span>Power BI</span><span>DAX</span><span>Power Platform</span><span>Excel</span>
-                    </div>
+                    <div class="tech-tags"><span>Power BI</span><span>DAX</span><span>Power Platform</span><span>Excel</span></div>
                 </div>
                 <div class="expertise-card">
-                    <div class="card-icon">
-                        <i class="fas fa-robot"></i>
-                    </div>
+                    <div class="card-icon"><i class="fas fa-robot"></i></div>
                     <h3>Enterprise AI & Copilot</h3>
                     <p>Microsoft Copilot agents, LLM-powered workflows, MCP servers, and conversational AI for knowledge retrieval and business automation.</p>
-                    <div class="tech-tags">
-                        <span>Copilot</span><span>LLM</span><span>MCP</span><span>Power Automate</span>
-                    </div>
+                    <div class="tech-tags"><span>Copilot</span><span>LLM</span><span>MCP</span><span>Power Automate</span></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Microsoft Fabric Section -->
+    <!-- Microsoft Fabric Deep Dive (Kept as a standalone visual, removed from main nav to reduce clutter) -->
     <section id="fabric" class="fabric">
         <div class="container">
             <div class="fabric-header">
@@ -206,7 +200,6 @@
                 <h2 class="section-title">Fabric: Governed Lakehouse & Analytics Platform</h2>
                 <p class="fabric-desc">A governed, scalable, and secure analytics platform built on Microsoft Fabric Gen2 — integrating ERP sources through Fabric Dataflows into a curated Lakehouse, orchestrated by Fabric Pipelines, exposed through semantic models with RLS/CLS and consumed in Power BI.</p>
             </div>
-
             <div class="fabric-diagram" role="list">
                 <div class="fabric-node" role="listitem" tabindex="0" data-tooltip="ERP systems (Business Central / Dynamics 365) as transactional source systems. Capture full history and change tracking where possible.">
                     <div class="node-icon"><i class="fas fa-building"></i></div>
@@ -214,54 +207,42 @@
                     <p class="node-sub">Transactional data & master records</p>
                     <div class="tooltip">ERP systems (Business Central / Dynamics 365) — primary transactional sources. Use CDC or incremental extraction to Fabric Dataflows.</div>
                 </div>
-
                 <div class="connector" aria-hidden="true"></div>
-
                 <div class="fabric-node" role="listitem" tabindex="0" data-tooltip="Fabric Gen2 Dataflows perform Power Query-driven ETL/ELT: schema mapping, cleaning, type coercion, and data quality validations with built-in lineage.">
                     <div class="node-icon"><i class="fas fa-stream"></i></div>
                     <h4>Fabric Gen2 Dataflows<br><small>Power Query</small></h4>
                     <p class="node-sub">ETL/ELT & validations</p>
                     <div class="tooltip">Fabric Gen2 Dataflows: Power Query transformations, validations, basic profiling and column-level checks. Lineage and monitoring available in Fabric.</div>
                 </div>
-
                 <div class="connector" aria-hidden="true"></div>
-
                 <div class="fabric-node" role="listitem" tabindex="0" data-tooltip="Curated Lakehouse tables (delta) that serve as the single source of truth for analytics and model training.">
                     <div class="node-icon"><i class="fas fa-database"></i></div>
                     <h4>Lakehouse<br><small>Curated tables</small></h4>
                     <p class="node-sub">Trusted analytics tables</p>
                     <div class="tooltip">Lakehouse (delta tables) for curated, clean, query-ready datasets. Implement partitioning, compaction, and time travel policies.</div>
                 </div>
-
                 <div class="connector" aria-hidden="true"></div>
-
                 <div class="fabric-node" role="listitem" tabindex="0" data-tooltip="Fabric Pipelines orchestrate PySpark notebooks and jobs for analysis, aggregations, and quick ML tasks — integrated with compute and lifecycle management.">
                     <div class="node-icon"><i class="fas fa-play-circle"></i></div>
                     <h4>Fabric Pipelines<br><small>PySpark orchestration</small></h4>
                     <p class="node-sub">Batch & scheduled processing</p>
                     <div class="tooltip">Fabric Pipelines schedule and orchestrate notebooks and jobs. Use them for ETL orchestration, retraining models, and downstream aggregations.</div>
                 </div>
-
                 <div class="connector" aria-hidden="true"></div>
-
                 <div class="fabric-node" role="listitem" tabindex="0" data-tooltip="Semantic models define relationships, measures and business logic; publish models for Power BI consumption and centralized governance.">
                     <div class="node-icon"><i class="fas fa-layer-group"></i></div>
                     <h4>Semantic Models<br><small>Relationships & measures</small></h4>
                     <p class="node-sub">Curated business logic</p>
                     <div class="tooltip">Semantic models (Fabric / Power BI) expose standardized measures and relationships. Version and certify models for self-service analytics.</div>
                 </div>
-
                 <div class="connector" aria-hidden="true"></div>
-
                 <div class="fabric-node" role="listitem" tabindex="0" data-tooltip="Security controls: Row-Level Security (RLS) and Column-Level Security (CLS) enforced at model or lakehouse level to meet data privacy requirements.">
                     <div class="node-icon"><i class="fas fa-lock"></i></div>
                     <h4>RLS & CLS<br><small>Security</small></h4>
                     <p class="node-sub">Fine-grained access control</p>
                     <div class="tooltip">Enforce RLS and CLS in semantic models and on Lakehouse access. Combine with Fabric policies and Purview for governance.</div>
                 </div>
-
                 <div class="connector" aria-hidden="true"></div>
-
                 <div class="fabric-node" role="listitem" tabindex="0" data-tooltip="Power BI reports and dashboards consume the certified semantic models and Lakehouse datasets; provide self-service and governed delivery to stakeholders.">
                     <div class="node-icon"><i class="fas fa-chart-line"></i></div>
                     <h4>Consumption<br><small>Power BI</small></h4>
@@ -269,462 +250,282 @@
                     <div class="tooltip">Power BI consumes semantic models and the Lakehouse. Deliver operational reports, paginated reports and analytical dashboards with governed refresh schedules.</div>
                 </div>
             </div>
-
             <div style="text-align:center; margin-top:22px; color:var(--text-secondary);">
                 <em>Business value: A governed Fabric-based platform ensures trusted data, faster time-to-insight, simplified ML workflows, and secure consumption for enterprise stakeholders.</em>
             </div>
         </div>
     </section>
 
-    <!-- Projects Section -->
-    <section id="projects" class="projects">
+    <!-- UNIFIED PORTFOLIO SECTION (Replaces separate Projects, BI, Power Apps sections) -->
+    <section id="portfolio" class="portfolio">
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">Portfolio</span>
-                <h2 class="section-title">Featured Projects</h2>
-                <p class="section-desc">Production-grade solutions with measurable business impact</p>
+                <h2 class="section-title">Featured Work & Architecture</h2>
+                <p class="section-desc">Production-grade solutions, dashboards, and low-code applications with measurable business impact.</p>
             </div>
 
+            <!-- Global Filter Bar (Controls ALL cards below) -->
             <div class="filter-bar">
                 <button class="filter-btn active" data-filter="all">All</button>
                 <button class="filter-btn" data-filter="data-engineering">Data Engineering</button>
                 <button class="filter-btn" data-filter="ml">Machine Learning</button>
                 <button class="filter-btn" data-filter="bi">BI & Analytics</button>
+                <button class="filter-btn" data-filter="power-apps">Power Apps</button>
                 <button class="filter-btn" data-filter="ai">AI Solutions</button>
             </div>
 
+            <!-- Subsection: Core Projects -->
+            <h3 class="subsection-title">Core Projects & Architecture</h3>
             <div class="projects-grid">
-                <!-- Project 1: Credit Risk -->
-                <div class="project-card" data-category="ml">
+                <div class="project-card" data-category="ml" data-doc="credit-risk">
                     <div class="project-image">
-                        <div class="project-placeholder" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <div class="project-overlay">
-                            <button class="btn-view" onclick="openModal('credit-risk')">
-                                <i class="fas fa-project-diagram"></i> View Architecture
-                            </button>
-                        </div>
+                        <div class="project-placeholder" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"><i class="fas fa-shield-alt"></i></div>
+                        <div class="project-overlay"><button class="btn-view"><i class="fas fa-project-diagram"></i> View Architecture</button></div>
                     </div>
                     <div class="project-info">
-                        <div class="project-tags">
-                            <span class="tag">ML</span>
-                            <span class="tag">Risk</span>
-                        </div>
+                        <div class="project-tags"><span class="tag">ML</span><span class="tag">Risk</span></div>
                         <h3>Production Credit Scoring Model</h3>
                         <p>Logistic Regression & Random Forest model for Singaporean microfinance firm achieving 96% accuracy and 16.3% improvement in default prediction.</p>
                         <div class="project-metric"><strong>96%</strong><span>model accuracy</span></div>
                     </div>
                 </div>
 
-                <!-- Project 2: MoPhones Portfolio -->
-                <div class="project-card" data-category="bi">
+                <div class="project-card" data-category="bi" data-doc="mophones">
                     <div class="project-image">
-                        <div class="project-placeholder" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                            <i class="fas fa-mobile-alt"></i>
-                        </div>
-                        <div class="project-overlay">
-                            <a class="btn-view" href="https://mophones-ksstnmfcqgr6rjsdpspc8r.streamlit.app/" target="_blank" rel="noopener">
-                                <i class="fas fa-external-link-alt"></i> Live Demo
-                            </a>
-                        </div>
+                        <div class="project-placeholder" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"><i class="fas fa-mobile-alt"></i></div>
+                        <div class="project-overlay"><button class="btn-view"><i class="fas fa-external-link-alt"></i> Live Demo</button></div>
                     </div>
                     <div class="project-info">
-                        <div class="project-tags">
-                            <span class="tag">Streamlit</span>
-                            <span class="tag">EDA</span>
-                        </div>
+                        <div class="project-tags"><span class="tag">Streamlit</span><span class="tag">EDA</span></div>
                         <h3>MoPhones Portfolio Analytics</h3>
                         <p>Comprehensive portfolio analysis on 109,702 loan accounts using Jupyter and Streamlit with Plotly visualizations and advanced profiling.</p>
                         <div class="project-metric"><strong>109,702</strong><span>loan accounts analysed</span></div>
-                        <div class="project-links">
-                            <a class="btn-view" href="https://mophones-ksstnmfcqgr6rjsdpspc8r.streamlit.app/" target="_blank" rel="noopener">
-                                <i class="fas fa-external-link-alt"></i> Live Demo
-                            </a>
-                        </div>
                     </div>
                 </div>
 
-                <!-- Project 3: Sales Forecasting -->
-                <div class="project-card" data-category="ml">
+                <div class="project-card" data-category="ml" data-doc="forecasting">
                     <div class="project-image">
-                        <div class="project-placeholder" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                            <i class="fas fa-chart-area"></i>
-                        </div>
-                        <div class="project-overlay">
-                            <button class="btn-view" onclick="openModal('forecasting')">
-                                <i class="fas fa-project-diagram"></i> View Architecture
-                            </button>
-                        </div>
+                        <div class="project-placeholder" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"><i class="fas fa-chart-area"></i></div>
+                        <div class="project-overlay"><button class="btn-view"><i class="fas fa-project-diagram"></i> View Architecture</button></div>
                     </div>
                     <div class="project-info">
-                        <div class="project-tags">
-                            <span class="tag">Forecasting</span>
-                            <span class="tag">Azure</span>
-                        </div>
+                        <div class="project-tags"><span class="tag">Forecasting</span><span class="tag">Azure</span></div>
                         <h3>Predictive Sales Forecasting</h3>
                         <p>Retail sales forecasting using SARIMAX and reinforcement learning on Azure Databricks with automated retraining pipelines.</p>
                         <div class="project-metric"><strong>Automated</strong><span>retraining pipeline</span></div>
                     </div>
                 </div>
 
-                <!-- Project 4: AI Chatbot -->
-                <div class="project-card" data-category="ai">
+                <div class="project-card" data-category="ai" data-doc="chatbot">
                     <div class="project-image">
-                        <div class="project-placeholder" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
-                            <i class="fas fa-comments"></i>
-                        </div>
-                        <div class="project-overlay">
-                            <button class="btn-view" onclick="openModal('chatbot')">
-                                <i class="fas fa-project-diagram"></i> View Architecture
-                            </button>
-                        </div>
+                        <div class="project-placeholder" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"><i class="fas fa-comments"></i></div>
+                        <div class="project-overlay"><button class="btn-view"><i class="fas fa-project-diagram"></i> View Architecture</button></div>
                     </div>
                     <div class="project-info">
-                        <div class="project-tags">
-                            <span class="tag">LLM</span>
-                            <span class="tag">FastAPI</span>
-                        </div>
+                        <div class="project-tags"><span class="tag">LLM</span><span class="tag">FastAPI</span></div>
                         <h3>AI-Powered Customer Support</h3>
                         <p>Customer-facing chatbot with FastAPI and Gemini LLM, integrated with MongoDB achieving 86% query resolution without human intervention.</p>
                         <div class="project-metric"><strong>86%</strong><span>queries resolved automatically</span></div>
                     </div>
                 </div>
 
-                <!-- Project 5: Big Data Pipeline -->
-                <div class="project-card" data-category="data-engineering">
+                <div class="project-card" data-category="data-engineering" data-doc="bigdata">
                     <div class="project-image">
-                        <div class="project-placeholder" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-                            <i class="fas fa-server"></i>
-                        </div>
-                        <div class="project-overlay">
-                            <button class="btn-view" onclick="openModal('bigdata')">
-                                <i class="fas fa-expand"></i> View Details
-                            </button>
-                        </div>
+                        <div class="project-placeholder" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"><i class="fas fa-server"></i></div>
+                        <div class="project-overlay"><button class="btn-view"><i class="fas fa-expand"></i> View Details</button></div>
                     </div>
                     <div class="project-info">
-                        <div class="project-tags">
-                            <span class="tag">Hadoop</span>
-                            <span class="tag">Spark</span>
-                        </div>
+                        <div class="project-tags"><span class="tag">Hadoop</span><span class="tag">Spark</span></div>
                         <h3>Enterprise Big Data Pipeline</h3>
                         <p>Scalable data pipelines using Hadoop and Apache Spark for high-throughput analytics and seamless ingestion into Azure-hosted ML models.</p>
                         <div class="project-metric"><strong>High-throughput</strong><span>analytics ingestion</span></div>
                     </div>
                 </div>
 
-                <!-- Project 6: Power BI Enterprise -->
-                <div class="project-card" data-category="bi">
+                <div class="project-card" data-category="bi" data-doc="powerbi">
                     <div class="project-image">
-                        <div class="project-placeholder" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
-                            <i class="fas fa-tachometer-alt"></i>
-                        </div>
-                        <div class="project-overlay">
-                            <button class="btn-view" onclick="openModal('powerbi')">
-                                <i class="fas fa-expand"></i> View Details
-                            </button>
-                        </div>
+                        <div class="project-placeholder" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);"><i class="fas fa-tachometer-alt"></i></div>
+                        <div class="project-overlay"><button class="btn-view"><i class="fas fa-expand"></i> View Details</button></div>
                     </div>
                     <div class="project-info">
-                        <div class="project-tags">
-                            <span class="tag">Power BI</span>
-                            <span class="tag">DAX</span>
-                        </div>
+                        <div class="project-tags"><span class="tag">Power BI</span><span class="tag">DAX</span></div>
                         <h3>Enterprise BI Dashboards</h3>
                         <p>Power BI solutions for Kenyan organizations with real-time decision-making, automatic refresh, and elimination of manual Excel reporting.</p>
                         <div class="project-metric"><strong>Real-time</strong><span>decision visibility</span></div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- BI Dashboards Section -->
-    <section id="bi-dashboards" class="bi-dashboards">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Business Intelligence</span>
-                <h2 class="section-title">BI & Analytics Dashboards</h2>
-                <p class="section-desc">Interactive dashboards and reports built using Power BI and other BI tools.</p>
-            </div>
-
-            <!-- Tabs -->
-            <div class="bi-tabs" role="tablist" aria-label="Dashboard categories">
-                <button class="tab-btn active" data-cat="credit" role="tab" aria-selected="true" aria-controls="panel-credit">
-                    <i class="fas fa-chart-line"></i> Credit & Loan
-                </button>
-                <button class="tab-btn" data-cat="sales" role="tab" aria-selected="false" aria-controls="panel-sales">
-                    <i class="fas fa-chart-bar"></i> Sales
-                </button>
-                <button class="tab-btn" data-cat="hr" role="tab" aria-selected="false" aria-controls="panel-hr">
-                    <i class="fas fa-users"></i> HR
-                </button>
-            </div>
-
-            <!-- Credit & Loan Panel -->
-            <div class="dashboard-panel active" data-cat="credit" id="panel-credit" role="tabpanel" aria-labelledby="tab-credit">
-                <div class="dashboard-grid">
-                    <div class="dashboard-card">
-                        <div class="dashboard-icon">
-                            <i class="fas fa-mobile-alt"></i>
-                        </div>
-                        <h4>MoPhones Credit Portfolio</h4>
-                        <p class="dashboard-company">Telecom & Device Financing</p>
-                        <p>Interactive dashboard analyzing credit risk and loan portfolio performance for device financing.</p>
-                        <div class="dashboard-tags">
-                            <span>Credit Risk</span>
-                            <span>Streamlit</span>
-                        </div>
-                        <a href="https://mophones-ksstnmfcqgr6rjsdpspc8r.streamlit.app/" class="dashboard-link" target="_blank" rel="noopener">
-                            <i class="fas fa-external-link-alt"></i> View Live Demo
-                        </a>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <div class="dashboard-icon">
-                            <i class="fas fa-file-alt"></i>
-                        </div>
-                        <h4>Credit Analysis Report</h4>
-                        <p class="dashboard-company">Financial Services</p>
-                        <p>Comprehensive credit analysis report with key metrics for loan portfolio assessment.</p>
-                        <div class="dashboard-tags">
-                            <span>Power BI</span>
-                            <span>Financial Analysis</span>
-                        </div>
-                        <a href="#" class="dashboard-link">
-                            <i class="fas fa-eye"></i> View Details
-                        </a>
-                    </div>
+            <!-- Subsection: BI Dashboards -->
+            <h3 class="subsection-title">BI & Analytics Dashboards</h3>
+            <div class="dashboard-grid">
+                <div class="dashboard-card" data-category="bi" data-doc="mophones">
+                    <div class="dashboard-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <h4>MoPhones Credit Portfolio</h4>
+                    <p class="dashboard-company">Telecom & Device Financing</p>
+                    <p>Interactive dashboard analyzing credit risk and loan portfolio performance for device financing.</p>
+                    <div class="dashboard-tags"><span>Credit Risk</span><span>Streamlit</span></div>
+                    <button class="dashboard-link"><i class="fas fa-external-link-alt"></i> View Live Demo</button>
+                </div>
+                <div class="dashboard-card" data-category="bi">
+                    <div class="dashboard-icon"><i class="fas fa-file-alt"></i></div>
+                    <h4>Credit Analysis Report</h4>
+                    <p class="dashboard-company">Financial Services</p>
+                    <p>Comprehensive credit analysis report with key metrics for loan portfolio assessment.</p>
+                    <div class="dashboard-tags"><span>Power BI</span><span>Financial Analysis</span></div>
+                    <button class="dashboard-link"><i class="fas fa-eye"></i> View Details</button>
+                </div>
+                <div class="dashboard-card" data-category="bi">
+                    <div class="dashboard-icon"><i class="fas fa-truck"></i></div>
+                    <h4>Tyre Distribution Sales</h4>
+                    <p class="dashboard-company">Automotive - Tyre Distributor</p>
+                    <p>Sales performance dashboard for a leading tyre distribution company in Kenya.</p>
+                    <div class="dashboard-tags"><span>Power BI</span><span>Sales Analytics</span></div>
+                    <button class="dashboard-link"><i class="fas fa-eye"></i> View Details</button>
+                </div>
+                <div class="dashboard-card" data-category="bi">
+                    <div class="dashboard-icon"><i class="fas fa-cow"></i></div>
+                    <h4>Dairy Products Sales</h4>
+                    <p class="dashboard-company">FMCG - Dairy Producer</p>
+                    <p>Sales analytics dashboard for a major dairy products company.</p>
+                    <div class="dashboard-tags"><span>Power BI</span><span>FMCG</span></div>
+                    <button class="dashboard-link"><i class="fas fa-eye"></i> View Details</button>
+                </div>
+                <div class="dashboard-card" data-category="bi">
+                    <div class="dashboard-icon"><i class="fas fa-hospital"></i></div>
+                    <h4>Hospital Services Sales</h4>
+                    <p class="dashboard-company">Healthcare - Private Hospital</p>
+                    <p>Revenue and service utilization dashboard for a private hospital.</p>
+                    <div class="dashboard-tags"><span>Power BI</span><span>Healthcare</span></div>
+                    <button class="dashboard-link"><i class="fas fa-eye"></i> View Details</button>
+                </div>
+                <div class="dashboard-card" data-category="bi">
+                    <div class="dashboard-icon"><i class="fas fa-taxi"></i></div>
+                    <h4>Cab Utilization</h4>
+                    <p class="dashboard-company">Transportation - Ride-Hailing</p>
+                    <p>Driver utilization and cab fleet performance dashboard.</p>
+                    <div class="dashboard-tags"><span>Power BI</span><span>Operations</span></div>
+                    <button class="dashboard-link"><i class="fas fa-eye"></i> View Details</button>
+                </div>
+                <div class="dashboard-card" data-category="bi">
+                    <div class="dashboard-icon"><i class="fas fa-user-cog"></i></div>
+                    <h4>HR Management</h4>
+                    <p class="dashboard-company">Human Resources</p>
+                    <p>Employee management dashboard with headcount, attrition, and demographics.</p>
+                    <div class="dashboard-tags"><span>Power BI</span><span>HR Analytics</span></div>
+                    <button class="dashboard-link"><i class="fas fa-eye"></i> View Details</button>
+                </div>
+                <div class="dashboard-card" data-category="bi">
+                    <div class="dashboard-icon"><i class="fas fa-ticket-alt"></i></div>
+                    <h4>Ticketing Dashboard</h4>
+                    <p class="dashboard-company">IT Service Management</p>
+                    <p>IT support ticketing analytics with SLA compliance and resolution metrics.</p>
+                    <div class="dashboard-tags"><span>Power BI</span><span>ITSM</span></div>
+                    <button class="dashboard-link"><i class="fas fa-eye"></i> View Details</button>
+                </div>
+                <div class="dashboard-card" data-category="bi">
+                    <div class="dashboard-icon"><i class="fas fa-route"></i></div>
+                    <h4>Appraisal Journey</h4>
+                    <p class="dashboard-company">Performance Management</p>
+                    <p>Employee appraisal journey tracking with completion rates and feedback analytics.</p>
+                    <div class="dashboard-tags"><span>Power BI</span><span>Performance</span></div>
+                    <button class="dashboard-link"><i class="fas fa-eye"></i> View Details</button>
                 </div>
             </div>
 
-            <!-- Sales Panel -->
-            <div class="dashboard-panel" data-cat="sales" id="panel-sales" role="tabpanel" aria-labelledby="tab-sales" style="display: none;">
-                <div class="dashboard-grid">
-                    <div class="dashboard-card">
-                        <div class="dashboard-icon">
-                            <i class="fas fa-truck"></i>
-                        </div>
-                        <h4>Tyre Distribution Sales</h4>
-                        <p class="dashboard-company">Automotive - Tyre Distributor</p>
-                        <p>Sales performance dashboard for a leading tyre distribution company in Kenya.</p>
-                        <div class="dashboard-tags">
-                            <span>Power BI</span>
-                            <span>Sales Analytics</span>
-                        </div>
-                        <a href="#" class="dashboard-link">
-                            <i class="fas fa-eye"></i> View Details
-                        </a>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <div class="dashboard-icon">
-                            <i class="fas fa-cow"></i>
-                        </div>
-                        <h4>Dairy Products Sales</h4>
-                        <p class="dashboard-company">FMCG - Dairy Producer</p>
-                        <p>Sales analytics dashboard for a major dairy products company.</p>
-                        <div class="dashboard-tags">
-                            <span>Power BI</span>
-                            <span>FMCG</span>
-                        </div>
-                        <a href="#" class="dashboard-link">
-                            <i class="fas fa-eye"></i> View Details
-                        </a>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <div class="dashboard-icon">
-                            <i class="fas fa-hospital"></i>
-                        </div>
-                        <h4>Hospital Services Sales</h4>
-                        <p class="dashboard-company">Healthcare - Private Hospital</p>
-                        <p>Revenue and service utilization dashboard for a private hospital.</p>
-                        <div class="dashboard-tags">
-                            <span>Power BI</span>
-                            <span>Healthcare</span>
-                        </div>
-                        <a href="#" class="dashboard-link">
-                            <i class="fas fa-eye"></i> View Details
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- HR Panel -->
-            <div class="dashboard-panel" data-cat="hr" id="panel-hr" role="tabpanel" aria-labelledby="tab-hr" style="display: none;">
-                <div class="dashboard-grid">
-                    <div class="dashboard-card">
-                        <div class="dashboard-icon">
-                            <i class="fas fa-taxi"></i>
-                        </div>
-                        <h4>Cab Utilization</h4>
-                        <p class="dashboard-company">Transportation - Ride-Hailing</p>
-                        <p>Driver utilization and cab fleet performance dashboard.</p>
-                        <div class="dashboard-tags">
-                            <span>Power BI</span>
-                            <span>Operations</span>
-                        </div>
-                        <a href="#" class="dashboard-link">
-                            <i class="fas fa-eye"></i> View Details
-                        </a>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <div class="dashboard-icon">
-                            <i class="fas fa-user-cog"></i>
-                        </div>
-                        <h4>HR Management</h4>
-                        <p class="dashboard-company">Human Resources</p>
-                        <p>Employee management dashboard with headcount, attrition, and demographics.</p>
-                        <div class="dashboard-tags">
-                            <span>Power BI</span>
-                            <span>HR Analytics</span>
-                        </div>
-                        <a href="#" class="dashboard-link">
-                            <i class="fas fa-eye"></i> View Details
-                        </a>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <div class="dashboard-icon">
-                            <i class="fas fa-ticket-alt"></i>
-                        </div>
-                        <h4>Ticketing Dashboard</h4>
-                        <p class="dashboard-company">IT Service Management</p>
-                        <p>IT support ticketing analytics with SLA compliance and resolution metrics.</p>
-                        <div class="dashboard-tags">
-                            <span>Power BI</span>
-                            <span>ITSM</span>
-                        </div>
-                        <a href="#" class="dashboard-link">
-                            <i class="fas fa-eye"></i> View Details
-                        </a>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <div class="dashboard-icon">
-                            <i class="fas fa-route"></i>
-                        </div>
-                        <h4>Appraisal Journey</h4>
-                        <p class="dashboard-company">Performance Management</p>
-                        <p>Employee appraisal journey tracking with completion rates and feedback analytics.</p>
-                        <div class="dashboard-tags">
-                            <span>Power BI</span>
-                            <span>Performance</span>
-                        </div>
-                        <a href="#" class="dashboard-link">
-                            <i class="fas fa-eye"></i> View Details
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Power Apps Section -->
-    <section id="power-apps" class="power-apps">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Low-Code Solutions</span>
-                <h2 class="section-title">Power Apps Portfolio</h2>
-                <p class="section-desc">Custom business applications built using Microsoft Power Platform to automate and streamline processes.</p>
-            </div>
-
+            <!-- Subsection: Power Apps -->
+            <h3 class="subsection-title">Power Apps & Low-Code Solutions</h3>
             <div class="pp-grid">
-                <!-- Appraisal Application -->
-                <div class="pp-card" data-doc="gardaworld-appraisal" tabindex="0" role="button" aria-label="View Appraisal Application prototype">
-                    <div class="pp-preview">
-                        <i class="fas fa-clipboard-check"></i>
-                        <span class="pp-badge">HR Process</span>
-                    </div>
+                <div class="pp-card" data-category="power-apps" data-doc="gardaworld-appraisal" tabindex="0" role="button" aria-label="View Appraisal Application prototype">
+                    <div class="pp-preview"><i class="fas fa-clipboard-check"></i><span class="pp-badge">HR Process</span></div>
                     <div class="pp-info">
                         <h4>Appraisal Application</h4>
                         <p class="pp-company">Security Services Provider</p>
                         <p>Streamlined employee appraisal application with manager review workflows and performance tracking.</p>
-                        <div class="pp-tags">
-                            <span>Employee Engagement</span>
-                            <span>Performance</span>
-                        </div>
-                        <button class="pp-view-btn">
-                            <i class="fas fa-eye"></i> View Prototype
-                        </button>
+                        <div class="pp-tags"><span>Employee Engagement</span><span>Performance</span></div>
+                        <button class="pp-view-btn"><i class="fas fa-eye"></i> View Prototype</button>
                     </div>
                 </div>
-
-                <!-- Employee Meal Selection -->
-                <div class="pp-card" data-doc="employee-meal" tabindex="0" role="button" aria-label="View Employee Meal Selection prototype">
-                    <div class="pp-preview">
-                        <i class="fas fa-utensils"></i>
-                        <span class="pp-badge">Employee Services</span>
-                    </div>
+                <div class="pp-card" data-category="power-apps" data-doc="employee-meal" tabindex="0" role="button" aria-label="View Employee Meal Selection prototype">
+                    <div class="pp-preview"><i class="fas fa-utensils"></i><span class="pp-badge">Employee Services</span></div>
                     <div class="pp-info">
                         <h4>Employee Meal Selection</h4>
                         <p class="pp-company">IT Services Company</p>
                         <p>Daily meal selection app allowing employees to choose meals and manage dietary preferences.</p>
-                        <div class="pp-tags">
-                            <span>Employee Engagement</span>
-                            <span>Self-Service</span>
-                        </div>
-                        <button class="pp-view-btn">
-                            <i class="fas fa-eye"></i> View Prototype
-                        </button>
+                        <div class="pp-tags"><span>Employee Engagement</span><span>Self-Service</span></div>
+                        <button class="pp-view-btn"><i class="fas fa-eye"></i> View Prototype</button>
                     </div>
                 </div>
-
-                <!-- PM Ticket Follow-up -->
-                <div class="pp-card" data-doc="pm-ticket" tabindex="0" role="button" aria-label="View PM Ticket Follow-up prototype">
-                    <div class="pp-preview">
-                        <i class="fas fa-tasks"></i>
-                        <span class="pp-badge">Operations</span>
-                    </div>
+                <div class="pp-card" data-category="power-apps" data-doc="pm-ticket" tabindex="0" role="button" aria-label="View PM Ticket Follow-up prototype">
+                    <div class="pp-preview"><i class="fas fa-tasks"></i><span class="pp-badge">Operations</span></div>
                     <div class="pp-info">
                         <h4>PM Ticket Follow-up</h4>
                         <p class="pp-company">IT Services Company</p>
                         <p>Ticket management system for preventive maintenance tracking and resolution follow-ups.</p>
-                        <div class="pp-tags">
-                            <span>Ticketing</span>
-                            <span>Maintenance</span>
-                        </div>
-                        <button class="pp-view-btn">
-                            <i class="fas fa-eye"></i> View Prototype
-                        </button>
+                        <div class="pp-tags"><span>Ticketing</span><span>Maintenance</span></div>
+                        <button class="pp-view-btn"><i class="fas fa-eye"></i> View Prototype</button>
                     </div>
                 </div>
-
-                <!-- Journey Management Automation -->
-                <div class="pp-card" data-doc="garda-journey" tabindex="0" role="button" aria-label="View Journey Management Automation proposal">
-                    <div class="pp-preview">
-                        <i class="fas fa-route"></i>
-                        <span class="pp-badge">Automation</span>
-                    </div>
+                <div class="pp-card" data-category="power-apps" data-doc="garda-journey" tabindex="0" role="button" aria-label="View Journey Management Automation proposal">
+                    <div class="pp-preview"><i class="fas fa-route"></i><span class="pp-badge">Automation</span></div>
                     <div class="pp-info">
                         <h4>Journey Management Automation</h4>
                         <p class="pp-company">Security Services Provider</p>
                         <p>Automated journey management system for tracking employee travel, approvals, and safety compliance.</p>
-                        <div class="pp-tags">
-                            <span>Automation</span>
-                            <span>Safety</span>
-                        </div>
-                        <button class="pp-view-btn">
-                            <i class="fas fa-eye"></i> View Proposal
-                        </button>
+                        <div class="pp-tags"><span>Automation</span><span>Safety</span></div>
+                        <button class="pp-view-btn"><i class="fas fa-eye"></i> View Proposal</button>
                     </div>
                 </div>
             </div>
+
+            <!-- Subsection: Flowcharts -->
+            <h3 class="subsection-title">Architecture Diagrams & Flowcharts</h3>
+            <div class="flowchart-grid">
+                <div class="flowchart-card" data-category="data-engineering" data-doc="etl-pipeline" tabindex="0" role="button" aria-label="View Azure ETL Pipeline Architecture">
+                    <div class="flowchart-preview"><div class="diagram-placeholder"><i class="fas fa-project-diagram"></i><span>ETL Pipeline Architecture</span></div></div>
+                    <div class="flowchart-info">
+                        <h4>Azure ETL Pipeline</h4>
+                        <p>End-to-end data flow from ERP sources to Power BI</p>
+                        <span class="file-type"><i class="fas fa-file-pdf"></i> PDF</span>
+                    </div>
+                </div>
+                <div class="flowchart-card" data-category="ml" data-doc="ml-lifecycle" tabindex="0" role="button" aria-label="View MLOps Lifecycle Diagram">
+                    <div class="flowchart-preview"><div class="diagram-placeholder"><i class="fas fa-brain"></i><span>ML Lifecycle</span></div></div>
+                    <div class="flowchart-info">
+                        <h4>MLOps Lifecycle</h4>
+                        <p>From training to production deployment and monitoring</p>
+                        <span class="file-type"><i class="fas fa-file-powerpoint"></i> PPTX</span>
+                    </div>
+                </div>
+                <div class="flowchart-card" data-category="bi" data-doc="bi-architecture" tabindex="0" role="button" aria-label="View Enterprise BI Architecture">
+                    <div class="flowchart-preview"><div class="diagram-placeholder"><i class="fas fa-sitemap"></i><span>BI Architecture</span></div></div>
+                    <div class="flowchart-info">
+                        <h4>Enterprise BI Stack</h4>
+                        <p>Semantic model, DAX layer, and dashboard architecture</p>
+                        <span class="file-type"><i class="fas fa-file-pdf"></i> PDF</span>
+                    </div>
+                </div>
+                <div class="flowchart-card" data-category="ai" data-doc="copilot-integration" tabindex="0" role="button" aria-label="View Copilot + MCP Integration Workflow">
+                    <div class="flowchart-preview"><div class="diagram-placeholder"><i class="fas fa-robot"></i><span>Copilot Integration</span></div></div>
+                    <div class="flowchart-info">
+                        <h4>Copilot + MCP Workflow</h4>
+                        <p>AI agent integration with enterprise datasets</p>
+                        <span class="file-type"><i class="fas fa-file-powerpoint"></i> PPTX</span>
+                    </div>
+                </div
+</div>
         </div>
     </section>
 
-    <!-- Process / Flowcharts Section -->
+    <!-- Process Section (Streamlined to just the timeline) -->
     <section id="process" class="process">
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">Methodology</span>
                 <h2 class="section-title">My Data Engineering Process</h2>
-                <p class="section-desc">From raw data to actionable insights — a systematic approach</p>
+                <p class="section-desc">From raw data to actionable insights — a systematic, evidence-led approach.</p>
             </div>
-
             <div class="process-timeline">
                 <div class="timeline-item">
                     <div class="timeline-marker">01</div>
@@ -762,68 +563,10 @@
                     </div>
                 </div>
             </div>
-
-            <div class="flowcharts-section">
-                <h3 class="subsection-title">Architecture Diagrams & Flowcharts</h3>
-                <div class="flowchart-grid">
-                    <div class="flowchart-card" onclick="openFlowchart('etl-pipeline')">
-                        <div class="flowchart-preview">
-                            <div class="diagram-placeholder">
-                                <i class="fas fa-project-diagram"></i>
-                                <span>ETL Pipeline Architecture</span>
-                            </div>
-                        </div>
-                        <div class="flowchart-info">
-                            <h4>Azure ETL Pipeline</h4>
-                            <p>End-to-end data flow from ERP sources to Power BI</p>
-                            <span class="file-type"><i class="fas fa-file-pdf"></i> PDF</span>
-                        </div>
-                    </div>
-                    <div class="flowchart-card" onclick="openFlowchart('ml-lifecycle')">
-                        <div class="flowchart-preview">
-                            <div class="diagram-placeholder">
-                                <i class="fas fa-brain"></i>
-                                <span>ML Lifecycle</span>
-                            </div>
-                        </div>
-                        <div class="flowchart-info">
-                            <h4>MLOps Lifecycle</h4>
-                            <p>From training to production deployment and monitoring</p>
-                            <span class="file-type"><i class="fas fa-file-powerpoint"></i> PPTX</span>
-                        </div>
-                    </div>
-                    <div class="flowchart-card" onclick="openFlowchart('bi-architecture')">
-                        <div class="flowchart-preview">
-                            <div class="diagram-placeholder">
-                                <i class="fas fa-sitemap"></i>
-                                <span>BI Architecture</span>
-                            </div>
-                        </div>
-                        <div class="flowchart-info">
-                            <h4>Enterprise BI Stack</h4>
-                            <p>Semantic model, DAX layer, and dashboard architecture</p>
-                            <span class="file-type"><i class="fas fa-file-pdf"></i> PDF</span>
-                        </div>
-                    </div>
-                    <div class="flowchart-card" onclick="openFlowchart('copilot-integration')">
-                        <div class="flowchart-preview">
-                            <div class="diagram-placeholder">
-                                <i class="fas fa-robot"></i>
-                                <span>Copilot Integration</span>
-                            </div>
-                        </div>
-                        <div class="flowchart-info">
-                            <h4>Copilot + MCP Workflow</h4>
-                            <p>AI agent integration with enterprise datasets</p>
-                            <span class="file-type"><i class="fas fa-file-powerpoint"></i> PPTX</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </section>
 
-    <!-- About Section -->
+    <!-- About Section (Now includes Certifications) -->
     <section id="about" class="about">
         <div class="container">
             <div class="about-grid">
@@ -841,32 +584,19 @@
                         20+ hours weekly in manual reporting.
                     </p>
                     <div class="about-highlights">
-                        <div class="highlight">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Azure & Databricks Certified</span>
-                        </div>
-                        <div class="highlight">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Power BI Data Analyst (PwC)</span>
-                        </div>
-                        <div class="highlight">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Machine Learning with Python (IBM)</span>
-                        </div>
+                        <div class="highlight"><i class="fas fa-check-circle"></i><span>Azure & Databricks Certified</span></div>
+                        <div class="highlight"><i class="fas fa-check-circle"></i><span>Power BI Data Analyst (PwC)</span></div>
+                        <div class="highlight"><i class="fas fa-check-circle"></i><span>Machine Learning with Python (IBM)</span></div>
                     </div>
                 </div>
                 <div class="about-visual">
                     <div class="about-photo">
                         <img src="assets/images/jnew.jpg" alt="Jeremiah Daniel Serenge - Data Engineer & Analytics Professional" loading="lazy">
-                        <p class="photo-caption">
-                            <i class="fas fa-map-marker-alt"></i> Nairobi, Kenya
-                        </p>
+                        <p class="photo-caption"><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</p>
                     </div>
                     <div class="code-window" style="margin-top: 32px;">
                         <div class="window-header">
-                            <div class="window-dot red"></div>
-                            <div class="window-dot yellow"></div>
-                            <div class="window-dot green"></div>
+                            <div class="window-dot red"></div><div class="window-dot yellow"></div><div class="window-dot green"></div>
                             <span class="window-title">pipeline.py</span>
                         </div>
                         <div class="window-body">
@@ -880,133 +610,58 @@
     df_clean.write.mode(<span class="code-string">"overwrite"</span>).saveAsTable(target)
     <span class="code-keyword">return</span> <span class="code-string">"Pipeline executed"</span></code></pre>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Certifications Section -->
-    <section id="certifications" class="certifications">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Credentials</span>
-                <h2 class="section-title">Licenses & Certifications</h2>
-                <p class="section-desc">Professional certifications that validate my expertise in data science, analytics, and AI.</p>
+                    </div
+</div>
             </div>
 
-            <div class="certifications-grid">
-                <!-- Microsoft AI Skills Fest -->
-                <div class="certification-card">
-                    <div class="cert-issuer">
-                        <div class="cert-logo">MS</div>
-                        <div class="cert-issuer-info">
-                            <h4>Microsoft</h4>
-                            <span>Issued Jun 2026</span>
-                        </div>
-                    </div>
-                    <h3>AI Skills Fest 2026</h3>
-                    <div class="cert-date">
-                        <i class="fas fa-calendar-check"></i> June 2026
-                    </div>
-                    <a href="#" class="cert-link" target="_blank" rel="noopener">
-                        <i class="fas fa-external-link-alt"></i> Show credential
-                    </a>
+            <!-- Integrated Certifications Grid -->
+            <div style="margin-top: 80px;">
+                <div class="section-header">
+                    <span class="section-tag">Credentials</span>
+                    <h2 class="section-title">Licenses & Certifications</h2>
                 </div>
-
-                <!-- University of Pennsylvania -->
-                <div class="certification-card">
-                    <div class="cert-issuer">
-                        <div class="cert-logo">UP</div>
-                        <div class="cert-issuer-info">
-                            <h4>University of Pennsylvania</h4>
-                            <span>Issued Jun 2026</span>
-                        </div>
+                <div class="certifications-grid">
+                    <div class="certification-card">
+                        <div class="cert-issuer"><div class="cert-logo">MS</div><div class="cert-issuer-info"><h4>Microsoft</h4><span>Issued Jun 2026</span></div></div>
+                        <h3>AI Skills Fest 2026</h3>
+                        <div class="cert-date"><i class="fas fa-calendar-check"></i> June 2026</div>
+                        <a href="#" class="cert-link" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> Show credential</a>
                     </div>
-                    <h3>Fundamentals of Quantitative Modeling</h3>
-                    <div class="cert-date">
-                        <i class="fas fa-calendar-check"></i> June 2026
+                    <div class="certification-card">
+                        <div class="cert-issuer"><div class="cert-logo">UP</div><div class="cert-issuer-info"><h4>University of Pennsylvania</h4><span>Issued Jun 2026</span></div></div>
+                        <h3>Fundamentals of Quantitative Modeling</h3>
+                        <div class="cert-date"><i class="fas fa-calendar-check"></i> June 2026</div>
+                        <p class="cert-id">Credential ID: 3GWSTHP5S7ZC</p>
+                        <a href="#" class="cert-link" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> Show credential</a>
                     </div>
-                    <p class="cert-id">Credential ID: 3GWSTHP5S7ZC</p>
-                    <a href="#" class="cert-link" target="_blank" rel="noopener">
-                        <i class="fas fa-external-link-alt"></i> Show credential
-                    </a>
-                </div>
-
-                <!-- IBM - Tools for Data Science -->
-                <div class="certification-card">
-                    <div class="cert-issuer">
-                        <div class="cert-logo">IBM</div>
-                        <div class="cert-issuer-info">
-                            <h4>IBM</h4>
-                            <span>Issued May 2025</span>
-                        </div>
+                    <div class="certification-card">
+                        <div class="cert-issuer"><div class="cert-logo">IBM</div><div class="cert-issuer-info"><h4>IBM</h4><span>Issued May 2025</span></div></div>
+                        <h3>Tools for Data Science</h3>
+                        <div class="cert-date"><i class="fas fa-calendar-check"></i> May 2025</div>
+                        <p class="cert-id">Credential ID: 6BA8XYDHR7JS</p>
+                        <a href="#" class="cert-link" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> Show credential</a>
                     </div>
-                    <h3>Tools for Data Science</h3>
-                    <div class="cert-date">
-                        <i class="fas fa-calendar-check"></i> May 2025
+                    <div class="certification-card">
+                        <div class="cert-issuer"><div class="cert-logo">IBM</div><div class="cert-issuer-info"><h4>IBM</h4><span>Issued Jan 2023</span></div></div>
+                        <h3>Machine Learning with Python</h3>
+                        <div class="cert-date"><i class="fas fa-calendar-check"></i> January 2023</div>
+                        <p class="cert-id">Credential ID: E6L8ZU8C8T93</p>
+                        <a href="#" class="cert-link" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> Show credential</a>
                     </div>
-                    <p class="cert-id">Credential ID: 6BA8XYDHR7JS</p>
-                    <a href="#" class="cert-link" target="_blank" rel="noopener">
-                        <i class="fas fa-external-link-alt"></i> Show credential
-                    </a>
-                </div>
-
-                <!-- IBM - Machine Learning with Python -->
-                <div class="certification-card">
-                    <div class="cert-issuer">
-                        <div class="cert-logo">IBM</div>
-                        <div class="cert-issuer-info">
-                            <h4>IBM</h4>
-                            <span>Issued Jan 2023</span>
-                        </div>
+                    <div class="certification-card">
+                        <div class="cert-issuer"><div class="cert-logo">IBM</div><div class="cert-issuer-info"><h4>IBM</h4><span>Issued May 2025</span></div></div>
+                        <h3>What is Data Science?</h3>
+                        <div class="cert-date"><i class="fas fa-calendar-check"></i> May 2025</div>
+                        <p class="cert-id">Credential ID: 6CR2Q37Y9DIE</p>
+                        <a href="#" class="cert-link" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> Show credential</a>
                     </div>
-                    <h3>Machine Learning with Python</h3>
-                    <div class="cert-date">
-                        <i class="fas fa-calendar-check"></i> January 2023
+                    <div class="certification-card">
+                        <div class="cert-issuer"><div class="cert-logo">PwC</div><div class="cert-issuer-info"><h4>Forage</h4><span>Issued Jan 2025</span></div></div>
+                        <h3>PwC Switzerland - Power BI Job Simulation</h3>
+                        <div class="cert-date"><i class="fas fa-calendar-check"></i> January 2025</div>
+                        <p class="cert-id">Credential ID: 6zkmHcKEXqpoNQiB4</p>
+                        <a href="#" class="cert-link" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> Show credential</a>
                     </div>
-                    <p class="cert-id">Credential ID: E6L8ZU8C8T93</p>
-                    <a href="#" class="cert-link" target="_blank" rel="noopener">
-                        <i class="fas fa-external-link-alt"></i> Show credential
-                    </a>
-                </div>
-
-                <!-- IBM - What is Data Science? -->
-                <div class="certification-card">
-                    <div class="cert-issuer">
-                        <div class="cert-logo">IBM</div>
-                        <div class="cert-issuer-info">
-                            <h4>IBM</h4>
-                            <span>Issued May 2025</span>
-                        </div>
-                    </div>
-                    <h3>What is Data Science?</h3>
-                    <div class="cert-date">
-                        <i class="fas fa-calendar-check"></i> May 2025
-                    </div>
-                    <p class="cert-id">Credential ID: 6CR2Q37Y9DIE</p>
-                    <a href="#" class="cert-link" target="_blank" rel="noopener">
-                        <i class="fas fa-external-link-alt"></i> Show credential
-                    </a>
-                </div>
-
-                <!-- Forage - PwC Switzerland -->
-                <div class="certification-card">
-                    <div class="cert-issuer">
-                        <div class="cert-logo">PwC</div>
-                        <div class="cert-issuer-info">
-                            <h4>Forage</h4>
-                            <span>Issued Jan 2025</span>
-                        </div>
-                    </div>
-                    <h3>PwC Switzerland - Power BI Job Simulation</h3>
-                    <div class="cert-date">
-                        <i class="fas fa-calendar-check"></i> January 2025
-                    </div>
-                    <p class="cert-id">Credential ID: 6zkmHcKEXqpoNQiB4</p>
-                    <a href="#" class="cert-link" target="_blank" rel="noopener">
-                        <i class="fas fa-external-link-alt"></i> Show credential
-                    </a>
                 </div>
             </div>
         </div>
@@ -1023,40 +678,20 @@
             <div class="contact-grid">
                 <div class="contact-info">
                     <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="contact-detail">
-                            <h4>Email</h4>
-                            <a href="mailto:jeremyserenge@gmail.com">jeremyserenge@gmail.com</a>
-                        </div>
+                        <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="contact-detail"><h4>Email</h4><a href="mailto:jeremyserenge@gmail.com">jeremyserenge@gmail.com</a></div>
                     </div>
                     <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fas fa-phone"></i>
-                        </div>
-                        <div class="contact-detail">
-                            <h4>Phone</h4>
-                            <a href="tel:+254708236755">+254 708 236 755</a>
-                        </div>
+                        <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                        <div class="contact-detail"><h4>Phone</h4><a href="tel:+254708236755">+254 708 236 755</a></div>
                     </div>
                     <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fab fa-github"></i>
-                        </div>
-                        <div class="contact-detail">
-                            <h4>GitHub</h4>
-                            <a href="https://github.com/jserenge" target="_blank">github.com/jserenge</a>
-                        </div>
+                        <div class="contact-icon"><i class="fab fa-github"></i></div>
+                        <div class="contact-detail"><h4>GitHub</h4><a href="https://github.com/jserenge" target="_blank">github.com/jserenge</a></div>
                     </div>
                     <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fab fa-linkedin"></i>
-                        </div>
-                        <div class="contact-detail">
-                            <h4>LinkedIn</h4>
-                            <a href="https://linkedin.com/in/serenge-daniel-ab2a4122b/" target="_blank">linkedin.com/in/serenge-daniel</a>
-                        </div>
+                        <div class="contact-icon"><i class="fab fa-linkedin"></i></div>
+                        <div class="contact-detail"><h4>LinkedIn</h4><a href="https://linkedin.com/in/serenge-daniel-ab2a4122b/" target="_blank">linkedin.com/in/serenge-daniel</a></div>
                     </div>
                 </div>
                 <div class="contact-form-wrapper">
