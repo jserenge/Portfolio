@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Big Data Pipeline — Spark on Microsoft Fabric &amp; Azure Data Factory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0E14;
+    --surface:#121824;
+    --surface-2:#171f2c;
+    --border:#25303f;
+    --text:#E7ECF3;
+    --text-dim:#8C99AC;
+    --amber:#F5A623;
+    --teal:#33D6C0;
+    --blue:#5B8DEF;
+    --bronze:#8a6a4b;
+    --silver:#9aa7b8;
+    --gold:#e8bb55;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{background:var(--bg);}
+  body{
+    background:
+      radial-gradient(1200px 600px at 15% -10%, rgba(51,214,192,0.10), transparent 60%),
+      radial-gradient(900px 500px at 90% 10%, rgba(245,166,35,0.08), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    padding:64px 24px 96px;
+  }
+  .wrap{max-width:1180px; margin:0 auto;}
+
+  /* ---------- Header ---------- */
+  header{margin-bottom:64px; max-width:760px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:7px; height:7px; border-radius:50%;
+    background:var(--amber);
+    box-shadow:0 0 0 4px rgba(245,166,35,0.15);
+  }
+  h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(32px, 4.4vw, 50px);
+    line-height:1.08;
+    letter-spacing:-0.01em;
+    margin-bottom:18px;
+  }
+  h1 span{color:var(--text-dim); font-weight:500;}
+  header p{
+    color:var(--text-dim);
+    font-size:16px;
+    line-height:1.65;
+    max-width:640px;
+  }
+  .stack-tags{
+    display:flex; flex-wrap:wrap; gap:8px;
+    margin-top:24px;
+  }
+  .stack-tags span{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--text-dim);
+    border:1px solid var(--border);
+    background:var(--surface);
+    padding:6px 10px;
+    border-radius:6px;
+  }
+
+  /* ---------- Pipeline ---------- */
+  .pipeline{
+    display:flex;
+    align-items:stretch;
+    gap:0;
+    margin-bottom:12px;
+  }
+  .stage{
+    flex:1 1 0;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px 18px;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    transition:border-color .25s ease, transform .25s ease, background .25s ease;
+    cursor:default;
+  }
+  .stage:hover{
+    border-color:rgba(51,214,192,0.45);
+    transform:translateY(-4px);
+    background:var(--surface-2);
+  }
+  .stage .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--text-dim);
+    letter-spacing:0.08em;
+  }
+  .stage .icon{
+    width:34px; height:34px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .stage h3{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:16.5px;
+    font-weight:600;
+    line-height:1.25;
+  }
+  .stage .role{
+    font-size:12.5px;
+    color:var(--accent, var(--teal));
+    font-family:'IBM Plex Mono', monospace;
+    letter-spacing:0.02em;
+  }
+  .stage p{
+    font-size:13px;
+    color:var(--text-dim);
+    line-height:1.55;
+  }
+  .stage .tech{
+    margin-top:auto;
+    display:flex; flex-wrap:wrap; gap:6px;
+    padding-top:10px;
+  }
+  .stage .tech span{
+    font-size:10.5px;
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--text);
+    background:rgba(255,255,255,0.04);
+    border:1px solid var(--border);
+    padding:3px 7px;
+    border-radius:5px;
+  }
+
+  .stage[data-accent="teal"]{ --accent:var(--teal); }
+  .stage[data-accent="blue"]{ --accent:var(--blue); }
+  .stage[data-accent="amber"]{ --accent:var(--amber); }
+  .stage[data-accent="gold"]{ --accent:var(--gold); }
+
+  /* medallion mini-bars for the lakehouse stage */
+  .medallion{display:flex; gap:5px; margin-top:2px;}
+  .medallion div{flex:1; height:5px; border-radius:3px; background:var(--border);}
+  .medallion .b1{background:var(--bronze);}
+  .medallion .b2{background:var(--silver);}
+  .medallion .b3{background:var(--gold);}
+
+  /* ---------- Connectors ---------- */
+  .connector{
+    flex:0 0 46px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .connector .line{
+    width:100%;
+    height:2px;
+    background:linear-gradient(90deg, var(--border), var(--border));
+    position:relative;
+    overflow:visible;
+  }
+  .connector .arrow{
+    position:absolute; right:-1px; top:50%;
+    transform:translateY(-50%);
+    width:0; height:0;
+    border-top:4px solid transparent;
+    border-bottom:4px solid transparent;
+    border-left:6px solid var(--border);
+  }
+  .connector .particle{
+    position:absolute; top:50%;
+    width:5px; height:5px;
+    border-radius:50%;
+    background:var(--amber);
+    box-shadow:0 0 8px 1px rgba(245,166,35,0.7);
+    transform:translateY(-50%);
+    animation:travel 2.6s linear infinite;
+  }
+  .connector .particle:nth-child(2){animation-delay:0.9s; background:var(--teal); box-shadow:0 0 8px 1px rgba(51,214,192,0.7);}
+  .connector .particle:nth-child(3){animation-delay:1.8s;}
+  @keyframes travel{
+    0%{left:-3px; opacity:0;}
+    10%{opacity:1;}
+    90%{opacity:1;}
+    100%{left:100%; opacity:0;}
+  }
+
+  /* ---------- Footer note ---------- */
+  .note{
+    margin-top:56px;
+    padding-top:28px;
+    border-top:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:16px;
+  }
+  .note p{
+    font-size:13px;
+    color:var(--text-dim);
+    max-width:620px;
+    line-height:1.6;
+  }
+  .note .credit{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--text-dim);
+    white-space:nowrap;
+  }
+  .note .credit b{color:var(--text); font-weight:500;}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:900px){
+    .pipeline{flex-direction:column; gap:0;}
+    .connector{flex:0 0 46px; width:100%;}
+    .connector .line{width:2px; height:100%;}
+    .connector{height:46px;}
+    .connector .arrow{
+      right:auto; top:auto; bottom:-1px; left:50%;
+      transform:translateX(-50%);
+      border-left:4px solid transparent;
+      border-right:4px solid transparent;
+      border-top:6px solid var(--border);
+      border-bottom:none;
+    }
+    .connector .particle{
+      left:50%; top:-3px;
+      transform:translateX(-50%);
+      animation:travelV 2.6s linear infinite;
+    }
+    .connector .particle:nth-child(2){animation-delay:0.9s;}
+    .connector .particle:nth-child(3){animation-delay:1.8s;}
+    @keyframes travelV{
+      0%{top:-3px; opacity:0;}
+      10%{opacity:1;}
+      90%{opacity:1;}
+      100%{top:100%; opacity:0;}
+    }
+    .stage:hover{transform:translateX(4px);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .connector .particle{animation:none; display:none;}
+    .stage{transition:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Architecture · Enterprise Big Data</div>
+    <h1>Big Data Pipeline <span>— Spark on Microsoft Fabric &amp; Azure Data Factory</span></h1>
+    <p>End-to-end architecture for moving high-volume operational data — ERP, transactional, and API sources — into a governed medallion lakehouse, transformed with PySpark, and served to the business through a certified semantic layer.</p>
+    <div class="stack-tags">
+      <span>Azure Data Factory</span>
+      <span>Microsoft Fabric</span>
+      <span>OneLake</span>
+      <span>PySpark Notebooks</span>
+      <span>Delta Lake</span>
+      <span>Power BI</span>
+    </div>
+  </header>
+
+  <div class="pipeline">
+
+    <div class="stage" data-accent="blue">
+      <div class="num">01</div>
+      <svg class="icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="7" height="7" rx="1.5" stroke="#5B8DEF" stroke-width="1.6"/><rect x="14" y="4" width="7" height="7" rx="1.5" stroke="#5B8DEF" stroke-width="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#5B8DEF" stroke-width="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#5B8DEF" stroke-width="1.6"/></svg>
+      <h3>Source Systems</h3>
+      <div class="role">Operational data</div>
+      <p>ERP transactional data, REST/OData APIs, and flat-file drops feeding the pipeline on scheduled or event-driven triggers.</p>
+      <div class="tech"><span>Business Central</span><span>OData</span><span>SQL / Files</span></div>
+    </div>
+
+    <div class="connector"><div class="line"><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="arrow"></div></div></div>
+
+    <div class="stage" data-accent="blue">
+      <div class="num">02</div>
+      <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M4 12h16M4 12l4-4M4 12l4 4M20 12l-4-4M20 12l-4 4" stroke="#5B8DEF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h3>Azure Data Factory</h3>
+      <div class="role">Orchestration &amp; ingestion</div>
+      <p>Copy activities and triggers land raw data into the lakehouse on a schedule, with retries, dependencies, and monitoring.</p>
+      <div class="tech"><span>Pipelines</span><span>Triggers</span><span>Copy Activity</span></div>
+    </div>
+
+    <div class="connector"><div class="line"><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="arrow"></div></div></div>
+
+    <div class="stage" data-accent="amber">
+      <div class="num">03</div>
+      <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 5.6L20 10l-5.6 2.4L12 18l-2.4-5.6L4 10l5.6-2.4L12 2z" stroke="#F5A623" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      <h3>Fabric Lakehouse</h3>
+      <div class="role">PySpark transformation</div>
+      <p>Notebooks run distributed PySpark jobs across OneLake, cleaning and modeling data through the medallion layers.</p>
+      <div class="medallion"><div class="b1"></div><div class="b2"></div><div class="b3"></div></div>
+      <div class="tech"><span>Bronze</span><span>Silver</span><span>Gold</span><span>Delta Tables</span></div>
+    </div>
+
+    <div class="connector"><div class="line"><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="arrow"></div></div></div>
+
+    <div class="stage" data-accent="teal">
+      <div class="num">04</div>
+      <svg class="icon" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h10" stroke="#33D6C0" stroke-width="1.6" stroke-linecap="round"/><circle cx="19" cy="18" r="2" stroke="#33D6C0" stroke-width="1.6"/></svg>
+      <h3>Semantic Model</h3>
+      <div class="role">Business layer</div>
+      <p>Gold-layer tables are modeled into a certified star schema with DAX measures, ready for enterprise-wide consumption.</p>
+      <div class="tech"><span>Star Schema</span><span>DAX</span><span>DirectLake</span></div>
+    </div>
+
+    <div class="connector"><div class="line"><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="arrow"></div></div></div>
+
+    <div class="stage" data-accent="gold">
+      <div class="num">05</div>
+      <svg class="icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="10" width="4" height="10" rx="1" stroke="#e8bb55" stroke-width="1.6"/><rect x="10" y="6" width="4" height="14" rx="1" stroke="#e8bb55" stroke-width="1.6"/><rect x="17" y="3" width="4" height="17" rx="1" stroke="#e8bb55" stroke-width="1.6"/></svg>
+      <h3>Consumption</h3>
+      <div class="role">Reporting &amp; insight</div>
+      <p>Power BI reports, paginated statements, and dashboards deliver refreshed insight straight to business stakeholders.</p>
+      <div class="tech"><span>Power BI</span><span>Paginated Reports</span><span>Dashboards</span></div>
+    </div>
+
+  </div>
+
+  <div class="note">
+    <p>Every hop is Delta-native, so ingestion, transformation, and consumption share one copy of the data in OneLake — no duplicated pipelines between the raw feed and the boardroom.</p>
+    <div class="credit"><b>Jeremiah Serenge</b> · Data Science &amp; BI Analytics</div>
+  </div>
+
+</div>
+</body>
+</html>
