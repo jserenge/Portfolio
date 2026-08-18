@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JD.BI — Loan Portfolio Management Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0E14;
+    --surface:#121824;
+    --surface-2:#171f2c;
+    --border:#25303f;
+    --text:#E7ECF3;
+    --text-dim:#8C99AC;
+    --amber:#F5A623;
+    --teal:#33D6C0;
+    --blue:#5B8DEF;
+    --gold:#e8bb55;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{background:var(--bg);}
+  body{
+    background:
+      radial-gradient(1200px 600px at 15% -10%, rgba(51,214,192,0.10), transparent 60%),
+      radial-gradient(900px 500px at 90% 10%, rgba(245,166,35,0.08), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    padding:64px 24px 96px;
+  }
+  .wrap{max-width:1180px; margin:0 auto;}
+
+  /* ---------- Header (shared system) ---------- */
+  header{margin-bottom:40px; max-width:780px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:7px; height:7px; border-radius:50%;
+    background:var(--amber);
+    box-shadow:0 0 0 4px rgba(245,166,35,0.15);
+  }
+  h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(30px, 4.2vw, 46px);
+    line-height:1.1;
+    letter-spacing:-0.01em;
+    margin-bottom:18px;
+  }
+  h1 span{color:var(--text-dim); font-weight:500;}
+  header p{
+    color:var(--text-dim);
+    font-size:16px;
+    line-height:1.65;
+    max-width:660px;
+  }
+  .stack-tags{display:flex; flex-wrap:wrap; gap:8px; margin-top:24px;}
+  .stack-tags span{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--text-dim);
+    border:1px solid var(--border);
+    background:var(--surface);
+    padding:6px 10px;
+    border-radius:6px;
+  }
+
+  /* ---------- Tabs ---------- */
+  .tabs{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:22px;
+    padding-bottom:22px;
+    border-bottom:1px solid var(--border);
+  }
+  .tab{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--text-dim);
+    background:var(--surface);
+    border:1px solid var(--border);
+    padding:9px 16px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:border-color .2s ease, color .2s ease, background .2s ease;
+    display:flex; align-items:center; gap:8px;
+  }
+  .tab .n{color:var(--text-dim); opacity:.6;}
+  .tab:hover{color:var(--text); border-color:#3a4759;}
+  .tab.active{
+    border-color:rgba(51,214,192,0.55);
+    color:var(--teal);
+    background:rgba(51,214,192,0.08);
+  }
+  .tab.active .n{color:var(--teal); opacity:1;}
+
+  /* ---------- Frame ---------- */
+  .frame{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:14px;
+  }
+  .frame-bar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:4px 8px 14px;
+  }
+  .frame-bar .dot{width:9px; height:9px; border-radius:50%;}
+  .frame-bar .d1{background:#E85D5D;}
+  .frame-bar .d2{background:#EFC94C;}
+  .frame-bar .d3{background:#5DCB7A;}
+  .frame-bar .label{
+    margin-left:10px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--text-dim);
+  }
+  .screenshot-holder{
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    background:#fff;
+    line-height:0;
+  }
+  .screenshot-holder img{
+    width:100%;
+    display:block;
+    cursor:zoom-in;
+  }
+  .caption{
+    margin-top:16px;
+    padding:0 6px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .caption p{
+    font-size:13px;
+    color:var(--text-dim);
+    line-height:1.6;
+    max-width:640px;
+  }
+  .caption .idx{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--text-dim);
+    white-space:nowrap;
+    padding-top:2px;
+  }
+
+  /* ---------- Footer note (shared system) ---------- */
+  .note{
+    margin-top:44px;
+    padding-top:28px;
+    border-top:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:16px;
+  }
+  .note p{font-size:13px; color:var(--text-dim); max-width:640px; line-height:1.6;}
+  .note .credit{font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--text-dim); white-space:nowrap;}
+  .note .credit b{color:var(--text); font-weight:500;}
+
+  /* ---------- Lightbox ---------- */
+  .lightbox{
+    position:fixed; inset:0;
+    background:rgba(6,8,12,0.92);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:40px;
+    z-index:50;
+    cursor:zoom-out;
+  }
+  .lightbox.open{display:flex;}
+  .lightbox img{
+    max-width:100%; max-height:100%;
+    border-radius:8px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  }
+  .lightbox .close{
+    position:absolute; top:24px; right:28px;
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--text-dim);
+    font-size:13px;
+    border:1px solid var(--border);
+    padding:6px 12px;
+    border-radius:6px;
+  }
+
+  @media (max-width:640px){
+    body{padding:40px 16px 72px;}
+    .tabs{gap:6px;}
+    .tab{padding:8px 12px; font-size:11.5px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Power BI · Loan Portfolio Management</div>
+    <h1>JD.BI <span>— Loan Portfolio Management Dashboard</span></h1>
+    <p>A five-page Power BI report built for a lending portfolio spanning eight branches — headline KPIs, risk and credit quality, collections performance, branch health, and customer segmentation, each designed as a distinct lens on the same book of loans.</p>
+    <div class="stack-tags">
+      <span>Power BI</span>
+      <span>DAX</span>
+      <span>Star Schema</span>
+      <span>Portfolio at Risk</span>
+      <span>Collections Analytics</span>
+    </div>
+  </header>
+
+  <div class="tabs" id="tabs">
+    <div class="tab active" data-i="0"><span class="n">00</span> Cover</div>
+    <div class="tab" data-i="1"><span class="n">01</span> Executive Overview</div>
+    <div class="tab" data-i="2"><span class="n">02</span> Risk &amp; Credit Quality</div>
+    <div class="tab" data-i="3"><span class="n">03</span> Collections</div>
+    <div class="tab" data-i="4"><span class="n">04</span> Branch Performance</div>
+    <div class="tab" data-i="5"><span class="n">05</span> Customer &amp; Lending</div>
+  </div>
+
+  <div class="frame">
+    <div class="frame-bar">
+      <span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span>
+      <span class="label" id="frame-label">00-cover.png</span>
+    </div>
+    <div class="screenshot-holder">
+      <img id="main-img" src="../images/00-cover.png" alt="JD.BI dashboard page">
+    </div>
+  </div>
+
+  <div class="caption">
+    <p id="caption-text">Report structure and summary — five pages, five lenses on the same portfolio, with the headline finding stated up front: collections are behind target and Portfolio at Risk exceeds policy.</p>
+    <div class="idx" id="caption-idx">Page 1 of 6</div>
+  </div>
+
+  <div class="note">
+    <p>Screenshots only — the report isn't hosted live since it was built under a Power BI license that has since lapsed. Click any page to view it full size.</p>
+    <div class="credit"><b>Jeremiah Serenge</b> · Data Science &amp; BI Analytics</div>
+  </div>
+
+</div>
+
+<div class="lightbox" id="lightbox">
+  <span class="close">Close ✕</span>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+  const pages = [
+    { file: '../images/00-cover.png', label: '00-cover.png', caption: 'Report structure and summary — five pages, five lenses on the same portfolio, with the headline finding stated up front: collections are behind target and Portfolio at Risk exceeds policy.' },
+    { file: '../images/01-executive-overview.png', label: '01-executive-overview.png', caption: 'Headline KPIs, disbursement and outstanding trend by month, loan type breakdown, loan status, and a branch performance ranking table with a composite health score.' },
+    { file: '../images/02-risk-credit-quality.png', label: '02-risk-credit-quality.png', caption: 'Portfolio at Risk, NPL rate, and default rate by loan type, an NPL trend by month, and a loan aging heatmap surfacing where delinquency concentrates across the book.' },
+    { file: '../images/03-collections.png', label: '03-collections.png', caption: 'Collection rate against target, disbursed vs budget by month and branch, collection rate by loan type, and a branch-level table of collection gaps.' },
+    { file: '../images/04-branch-performance.png', label: '04-branch-performance.png', caption: 'Branch health scoring, collection rate and budget variance per branch, and a drill-through table down to loan officer within each branch and region.' },
+    { file: '../images/05-customer-lending.png', label: '05-customer-lending.png', caption: 'Customer segmentation by NPL rate and loan distribution, average loan size and cumulative share by segment, and disbursed vs outstanding by segment over time.' }
+  ];
+
+  const tabs = document.querySelectorAll('.tab');
+  const mainImg = document.getElementById('main-img');
+  const frameLabel = document.getElementById('frame-label');
+  const captionText = document.getElementById('caption-text');
+  const captionIdx = document.getElementById('caption-idx');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+
+  function showPage(i) {
+    tabs.forEach(t => t.classList.toggle('active', +t.dataset.i === i));
+    mainImg.src = pages[i].file;
+    frameLabel.textContent = pages[i].label;
+    captionText.textContent = pages[i].caption;
+    captionIdx.textContent = 'Page ' + (i + 1) + ' of ' + pages.length;
+  }
+
+  tabs.forEach(t => t.addEventListener('click', () => showPage(+t.dataset.i)));
+
+  mainImg.addEventListener('click', () => {
+    lightboxImg.src = mainImg.src;
+    lightbox.classList.add('open');
+  });
+  lightbox.addEventListener('click', () => lightbox.classList.remove('open'));
+
+  document.addEventListener('keydown', (e) => {
+    const current = +document.querySelector('.tab.active').dataset.i;
+    if (e.key === 'Escape') lightbox.classList.remove('open');
+    if (e.key === 'ArrowRight') showPage(Math.min(current + 1, pages.length - 1));
+    if (e.key === 'ArrowLeft') showPage(Math.max(current - 1, 0));
+  });
+</script>
+</body>
+</html>
