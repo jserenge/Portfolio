@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DataposIT — Service Desk Performance Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0E14;
+    --surface:#121824;
+    --surface-2:#171f2c;
+    --border:#25303f;
+    --text:#E7ECF3;
+    --text-dim:#8C99AC;
+    --amber:#F5A623;
+    --teal:#33D6C0;
+    --blue:#5B8DEF;
+    --rose:#E85D8A;
+    --gold:#e8bb55;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{background:var(--bg);}
+  body{
+    background:
+      radial-gradient(1200px 600px at 15% -10%, rgba(51,214,192,0.10), transparent 60%),
+      radial-gradient(900px 500px at 90% 10%, rgba(245,166,35,0.08), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    padding:64px 24px 96px;
+  }
+  .wrap{max-width:1180px; margin:0 auto;}
+
+  /* ---------- Header (shared system) ---------- */
+  header{margin-bottom:40px; max-width:780px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:7px; height:7px; border-radius:50%;
+    background:var(--amber);
+    box-shadow:0 0 0 4px rgba(245,166,35,0.15);
+  }
+  h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(30px, 4.2vw, 46px);
+    line-height:1.1;
+    letter-spacing:-0.01em;
+    margin-bottom:18px;
+  }
+  h1 span{color:var(--text-dim); font-weight:500;}
+  header p{
+    color:var(--text-dim);
+    font-size:16px;
+    line-height:1.65;
+    max-width:660px;
+  }
+  .stack-tags{display:flex; flex-wrap:wrap; gap:8px; margin-top:24px;}
+  .stack-tags span{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--text-dim);
+    border:1px solid var(--border);
+    background:var(--surface);
+    padding:6px 10px;
+    border-radius:6px;
+  }
+
+  /* ---------- KPI strip (pulled from the screenshot, in-theme) ---------- */
+  .kpis{
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:10px;
+    margin-bottom:22px;
+  }
+  .kpi{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:14px 16px;
+  }
+  .kpi .val{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:22px;
+    line-height:1;
+    margin-bottom:6px;
+  }
+  .kpi .val.warn{color:var(--rose);}
+  .kpi .lbl{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    color:var(--text-dim);
+    line-height:1.4;
+  }
+
+  /* ---------- Frame ---------- */
+  .frame{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:14px;
+  }
+  .frame-bar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:4px 8px 14px;
+  }
+  .frame-bar .dot{width:9px; height:9px; border-radius:50%;}
+  .frame-bar .d1{background:#E85D5D;}
+  .frame-bar .d2{background:#EFC94C;}
+  .frame-bar .d3{background:#5DCB7A;}
+  .frame-bar .label{
+    margin-left:10px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--text-dim);
+  }
+  .screenshot-holder{
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    background:#fff;
+    line-height:0;
+  }
+  .screenshot-holder img{
+    width:100%;
+    display:block;
+    cursor:zoom-in;
+  }
+  .caption{
+    margin-top:16px;
+    padding:0 6px;
+  }
+  .caption p{
+    font-size:13px;
+    color:var(--text-dim);
+    line-height:1.6;
+    max-width:720px;
+  }
+
+  /* ---------- Footer note (shared system) ---------- */
+  .note{
+    margin-top:44px;
+    padding-top:28px;
+    border-top:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:16px;
+  }
+  .note p{font-size:13px; color:var(--text-dim); max-width:640px; line-height:1.6;}
+  .note .credit{font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--text-dim); white-space:nowrap;}
+  .note .credit b{color:var(--text); font-weight:500;}
+
+  /* ---------- Lightbox ---------- */
+  .lightbox{
+    position:fixed; inset:0;
+    background:rgba(6,8,12,0.92);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:40px;
+    z-index:50;
+    cursor:zoom-out;
+  }
+  .lightbox.open{display:flex;}
+  .lightbox img{
+    max-width:100%; max-height:100%;
+    border-radius:8px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  }
+  .lightbox .close{
+    position:absolute; top:24px; right:28px;
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--text-dim);
+    font-size:13px;
+    border:1px solid var(--border);
+    padding:6px 12px;
+    border-radius:6px;
+  }
+
+  @media (max-width:900px){
+    .kpis{grid-template-columns:repeat(2, 1fr);}
+  }
+  @media (max-width:640px){
+    body{padding:40px 16px 72px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Power BI · Dataposit Africa</div>
+    <h1>DataposIT <span>— Service Desk Performance Review</span></h1>
+    <p>A cross-client service desk dashboard tracking ticket volume, SLA breaches, and agent workload across every company on the desk — with drill-through from a company-level treemap down to individual ticket rows.</p>
+    <div class="stack-tags">
+      <span>Power BI</span>
+      <span>DAX</span>
+      <span>SLA Tracking</span>
+      <span>Treemap Visual</span>
+      <span>Multi-Client Reporting</span>
+    </div>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi"><div class="val">23</div><div class="lbl">Tickets Closed This Week</div></div>
+    <div class="kpi"><div class="val">89</div><div class="lbl">Total Open Tickets</div></div>
+    <div class="kpi"><div class="val">22</div><div class="lbl">Tickets Closed Today</div></div>
+    <div class="kpi"><div class="val">20</div><div class="lbl">Avg Resolution Time (Days)</div></div>
+    <div class="kpi"><div class="val warn">197</div><div class="lbl">Escalate — Overdue</div></div>
+  </div>
+
+  <div class="frame">
+    <div class="frame-bar">
+      <span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span>
+      <span class="label">servicedesk-performance-review.png</span>
+    </div>
+    <div class="screenshot-holder">
+      <img id="main-img" src="../images/servicedesk-performance-review.png" alt="DataposIT Service Desk Performance Review dashboard">
+    </div>
+  </div>
+
+  <div class="caption">
+    <p>Open ticket status against SLA thresholds, an open-tickets-by-company treemap sized by volume, workload distribution across agents, and a searchable ticket log with priority and days-open. Click the image to view full size.</p>
+  </div>
+
+  <div class="note">
+    <p>Screenshot only — not hosted live, since the underlying Power BI workspace requires a license that isn't currently active.</p>
+    <div class="credit"><b>Jeremiah Serenge</b> · Data Science &amp; BI Analytics</div>
+  </div>
+
+</div>
+
+<div class="lightbox" id="lightbox">
+  <span class="close">Close ✕</span>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+  const mainImg = document.getElementById('main-img');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+
+  mainImg.addEventListener('click', () => {
+    lightboxImg.src = mainImg.src;
+    lightbox.classList.add('open');
+  });
+  lightbox.addEventListener('click', () => lightbox.classList.remove('open'));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') lightbox.classList.remove('open');
+  });
+</script>
+</body>
+</html>
